@@ -89,7 +89,7 @@ function namesEndEditor(name){
 
       let newEnd = endings[i][1];
 
-      const regex = new RegExp(`${end}`,'g');
+      const regex = new RegExp(`${end}$`,'g');
 
   const changedName = name.replace(regex, `${newEnd}`);
 
