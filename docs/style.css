@@ -76,7 +76,7 @@
   
     font-weight: 600;
   
-    //width: 100%;
+    width: 60%;
   
     text-align: center;
   
@@ -105,7 +105,7 @@
   
     z-index: 400;
   
-    transform: translateY(100%);
+    transform: translateY(130%);
   
     transition: all 1.3s cubic-bezier(0.19, 1, 0.22, 1);
   
