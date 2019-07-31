@@ -1,0 +1,768 @@
+<!DOCTYPE html><html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+
+content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+
+
+  <title>мои синодики</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+<div id='alertFon' class='hiddenAlert'></div>
+
+
+<div class='loader'>
+
+  <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#BDC6BC" stroke-width=".4px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path id='loaderCircle' d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path id='loaderCross' d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+</div>
+
+
+<div class='fromToFon'>
+
+  <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#BDC6BC" stroke-width=".4px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path  d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+</div>
+
+<main>
+
+  <div class='hMenu'>
+
+    <div class='cross'>+</div>
+
+    <div id='linksInMenu'>
+
+      
+
+      <span class='allListTag activLink hml invsbLink'>мои синодики</span>
+
+      <span class='startListTag invsbLink hml'>начать поминовение</span>
+
+      <span class='addListTag invsbLink hml'>добавить</span>
+
+       <span class='changeListTag invsbLink hml'>изменить</span>
+
+    </div>
+
+  </div>
+
+
+  <header>
+
+    <div class='sandwich'><div>|||</div></div>
+
+    <div class='logoHolder'>
+
+      <span class='test'>и</span>
+
+      <span class='test'>к</span>
+
+      <span class='test'>и</span>
+
+      <span class='test'>д</span>
+
+      <span class='test'>о</span>
+
+      <span class='test'>н</span>
+
+      <span class='test'>и</span>
+
+      <span class='test'>с</span>
+
+      <span class='test'>и</span>
+
+      <span class='test'>о</span>
+
+      <span class='test'>м</span>
+
+    </div>
+
+    
+
+    <div id='downSvgHolder'>
+
+    <svg id='liveLine0' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M545,90 H5" />
+
+     
+
+             </g>
+
+           </svg>
+
+    <svg id='liveLine1' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M545,90 H5" />
+
+     
+
+             </g>
+
+           </svg>
+
+       <svg id='liveLine2' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M40.75,90 H545" />
+
+     
+
+             </g>
+
+           </svg>
+
+       <svg id='liveLine3' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M40.75,90 A 32 32 0 1 1 41,90" />
+
+     
+
+             </g>
+
+           </svg>
+
+     </div>
+
+         
+
+     <div id='upSvgHolder'>
+
+          <svg id='deadLine0' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M545,90 H5" />
+
+     
+
+             </g>
+
+           </svg>
+
+    <svg id='deadLine1' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M545,90 H5" />
+
+     
+
+             </g>
+
+           </svg>
+
+       <svg id='deadLine2' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M40.75,90 H545" />
+
+     
+
+             </g>
+
+           </svg>
+
+       <svg id='deadLine3' viewBox='0 0 550 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M40.75,90 A 32 32 0 1 1 41,90" />
+
+     
+
+             </g>
+
+           </svg>
+
+      </div>
+
+  </header>
+
+
+  
+
+  <div class='formHolder'>
+
+   <div class='formTitle'>
+
+    <h3>Создание новой записи</h3>
+
+    <h5>( прежде всего выбирите тип синодика и пол )</h5>
+
+   </div>
+
+    <form id='addForm'>
+
+   <table style='border-collapse: collapse; vertical-align: bottom; width: 100%'>
+
+    <tr>
+
+    <td class='tabRight'>
+
+    <div class='radioHolder'>
+
+    <input type="radio" required id="liveChoice" class="newCreatedData"
+
+     name="liveOrDeath" value="о здравии">
+
+    <label for="liveChoice">о здравии</label>
+
+
+    <input type="radio" id="deathChoice" required class="newCreatedData"
+
+     name="liveOrDeath" value="о упокоении">
+
+    <label for="deathChoice">о упокоении</label>
+
+  </div>
+
+
+  <div class='radioHolder'>
+
+    <input type="radio" id="sexMChoice" required class="newCreatedData"
+
+     name="sex" value="муж">
+
+    <label for="sexMChoice">муж</label>
+
+
+    <input type="radio" id="sexFChoice" class="newCreatedData" required
+
+     name="sex" value="жен">
+
+    <label for="sexFChoice">жен</label>
+
+  </div>
+
+</td>
+
+</tr>
+
+</table>
+
+   <div class='selectsHolder hiddening' id='forMaleLive'>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="бол.">болящий</option>
+
+    <option value="пут.">путешествующий</option>
+
+    <option value="уч.">учащийся</option>
+
+  </select>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="мл.">младенец</option>
+
+    <option value="отр.">отрок</option>
+
+    <option value="диак.">диакон</option>
+
+    <option value="иер.">иерей</option>
+
+    <option value="прот.">протоиерей</option>
+
+    <option value="иг.">игумен</option>
+
+    <option value="схииг.">схиигумен</option>
+
+    <option value="протод.">протодиакон</option>
+
+    <option value="иерод.">иеродиакон</option>
+
+    <option value="инок">инок</option>
+
+    <option value="иером.">иеромонах</option>
+
+    <option value="монах">монах</option>
+
+    <option value="священноинок">священноинок</option>
+
+    <option value="еп.">епископ</option>
+
+    <option value="архиеп.">архиепископ</option>
+
+    <option value="архим.">архимандрит</option>
+
+    <option value="митр.">митрополит</option>
+
+    <option value="патр.">патриарх</option>
+
+    <option value="в.">воин</option>
+
+  </select>
+
+   </div>
+
+
+  <div class='selectsHolder hiddening' id='forFemaleLive'>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="бол.">болящая</option>
+
+    <option value="пут.">путешествующая</option>
+
+    <option value="уч.">учащаяся</option>
+
+    <option value='непр'>непраздная</option>
+
+  </select>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="мл.">младенец</option>
+
+    <option value="отр.">отроковица</option>
+
+    <option value="мат.">матушка</option>
+
+    <option value="ин.">инокиня</option>
+
+    <option value="мон.">монахиня</option>
+
+    <option value="иг.">игуменья</option>
+
+    <option value="схииг.">схиигуменья</option>
+
+  </select>
+
+   </div>
+
+
+
+   <div class='selectsHolder hiddening' id='forMaleDeath'>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="н/п">новопреставленный</option>
+
+    <option value="пр/пом.">приснопамятный</option>
+
+  </select>
+
+     <select>
+
+    <option value="0"></option>
+
+   <option value="мл.">младенец</option>
+
+    <option value="отр.">отрок</option>
+
+    <option value="диак.">диакон</option>
+
+    <option value="иер.">иерей</option>
+
+    <option value="прот.">протоиерей</option>
+
+    <option value="иг.">игумен</option>
+
+    <option value="схииг.">схиигумен</option>
+
+    <option value="протод.">протодиакон</option>
+
+    <option value="иерод.">иеродиакон</option>
+
+    <option value="инок">инок</option>
+
+    <option value="иером.">иеромонах</option>
+
+    <option value="монах">монах</option>
+
+    <option value="священноинок">священноинок</option>
+
+    <option value="еп.">епископ</option>
+
+    <option value="архиеп.">архиепископ</option>
+
+    <option value="архим.">архимандрит</option>
+
+     <option value="митр.">митрополит</option>
+
+    <option value="патр.">патриарх</option>
+
+    <option value="в.">воин</option>
+
+  </select>
+
+   </div>
+
+
+
+  <div class='selectsHolder hiddening' id='forFemaleDeath'>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="н/п.">новопреставленная</option>
+
+    <option value="пр/пом.">приснопамятная</option>
+
+  </select>
+
+     <select>
+
+    <option value="0"></option>
+
+    <option value="мл.">младенец</option>
+
+    <option value="отр.">отроковица</option>
+
+    <option value="мат.">матушка</option>
+
+    <option value="ин.">инокиня</option>
+
+    <option value="мон.">монахиня</option>
+
+    <option value="иг.">игуменья</option>
+
+    <option value="схииг.">схиигуменья</option>
+
+  </select>
+
+   </div>
+
+
+
+<table style='border-collapse: collapse; vertical-align: bottom'>
+
+      <tr>
+
+      <td>
+
+    <div class='fieldHolder'>
+
+     
+
+      <label class='fieldHolderLabel' for='name'>Имя:</label>
+
+      <input disabled class="newCreatedData" name='name' placeholder='Имя'/>
+
+    </div>
+
+    </td>
+
+    <td class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='surname'>Фамилия:</label>
+
+      <input disabled class="newCreatedData" name='surname' placeholder='Фамилия'/>
+
+    </div>
+
+   </td>
+
+  </tr>
+
+  <tr>
+
+      <td colspan='2' class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='fathername'>Отчество:</label>
+
+      <input disabled class="newCreatedData" name='fathername' placeholder='Отчество'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfBirth'>Дата рождения:</label>
+
+      <input disabled class="newCreatedData datePicker" name='dateOfBirth' placeholder='День рождения'/>
+
+    </div>
+
+  </td>
+
+      <td class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfBapt'>Дата крещения:</label>
+
+      <input disabled class="newCreatedData datePicker" name='dateOfBapt' placeholder='День крещения'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td>
+
+     <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfSaint'>Именины:</label>
+
+      <input disabled class="newCreatedData saintDatePicker" name='dateOfSaint' placeholder='Именины'/>
+
+    </div>
+
+  </td>
+
+      <td class='tabRight'>
+
+    <div class='fieldHolder additional' id='dateOfDeath'>
+
+      <label class='fieldHolderLabel' for='dateDeath'>Дата смерти:</label>
+
+      <input class="newCreatedData datePicker" name='dateDeath' disabled placeholder='День смерти'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfVows'>Дата пострига:</label>
+
+      <input disabled class="newCreatedData datePicker" name='dateOfVows' placeholder='День пострига'/>
+
+    </div>
+
+  </td>
+
+      <td class='tabRight'>
+
+     <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfOrdinationDiak'>Диаконская хиротония:</label>
+
+      <input class="newCreatedData forMenOnly datePicker" disabled name='dateOfOrdinationDiak' placeholder='Диак. хиротония'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td colspan='2' class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfOrdinationPriest'>Иерейская хиротония:</label>
+
+      <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationPriest' placeholder='Иер. хиротония'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td colspan='2' class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfOrdinationBish'>Епископская хиротония:</label>
+
+      <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationBish' placeholder='Еписк. хиротония'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td colspan='2' class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='dateOfEnthron'>Интронизация:</label>
+
+      <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfEnthron' placeholder='День интронизации'/>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+  <tr>
+
+      <td colspan='2' class='tabRight'>
+
+    <div class='fieldHolder additional'>
+
+      <label class='fieldHolderLabel' for='comment'>Комментарий:</label>
+
+      <textarea class="newCreatedData" name='comment' rows="10" disabled cols="50" placeholder='Комментарий'></textarea>
+
+    </div>
+
+  </td>
+
+  </tr>
+
+</table>
+
+   
+
+    <button type='button' class='addBtnDiv'>
+
+      добавить
+
+    </button>
+
+    </form>
+
+  </div>
+
+
+
+
+  <div class='allItems hiddening'>
+
+    <div id='oZdravii' class='first start1 card'></div>
+
+    <div id='oUpokoenii' class='second start2 card'></div>
+
+
+    <div class='pannel hiddening'>
+
+      <svg id='addIcon' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M50,40 V60 M40,50 H60" />
+
+             </g>
+
+           </svg>
+
+          <svg id='editIcon' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M54,40 H42 V60 H58 V44 M62,36 L50,48" />
+
+             </g>
+
+           </svg>
+
+          <svg id='playIcon' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M40,40 L60,50 L40,60 z" />
+
+             </g>
+
+           </svg>
+
+          <svg id='closeIcon'  viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M42,42 L58,58 M42,58 L58,42" />
+
+             </g>
+
+           </svg>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  <div class='searchingForChange hiddening'>
+
+    <div class='fieldHolder'>
+
+      <label class='fieldHolderLabel' for='search'>Поиск для правки:</label>
+
+      <input class='inputForSearch' name='search' placeholder='поиск...'/>
+
+    </div>
+
+    <div class='searchResults'></div>
+
+  </div>
+
+</main>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
