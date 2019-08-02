@@ -546,7 +546,7 @@ forFemaleDeath.classList.add('hiddening');
 
 newCreatedData
 
-    .filter(data=>!data.type==radio)
+    .filter(data=>data.type != 'radio')
 
     .forEach(i=>i.disabled=true);
 
