@@ -5,11 +5,25 @@
 
 
 
+
+/* -----------------------------------
+
+---- обьявляем переменные ---------------------------------- */
+
+
+
+
+
 const myKey = 'apiKey=2p8S-XYXJGzaPbRYMNWXb24YTrqsbZdV';
 
 
-
 const endings = [
+
+  ['арк', 'арка'],
+
+  ['ид','ида'],
+
+  ['фан','фана'],
 
   ['ара','ары'],
 
@@ -71,9 +85,109 @@ const endings = [
 
   ['имма', 'иммы'],
 
-  ['адий', 'адия']
+  ['адий', 'адия'],
+
+  ['лай', 'лая']
 
 ];
+
+
+const logoLetters = document.querySelectorAll(".test");
+
+
+let last_known_scroll_position = 0;
+
+let ticking = false;
+
+
+let deepestPoint;
+
+
+const pannel = document.getElementsByClassName('pannel')[0];
+
+
+const btnAdd = document.getElementsByClassName('addBtnDiv')[0];
+
+
+const formInputs = document.getElementsByTagName('input');
+
+
+const allLabels = [...document.getElementsByTagName('label')];
+
+
+const allSelects = [...document.getElementsByTagName('select')];
+
+
+const inputForSearch = document.getElementsByClassName('inputForSearch')[0];
+
+
+const sandwich = document.getElementsByClassName('sandwich')[0];
+
+
+const cross = document.getElementsByClassName('cross')[0];
+
+
+const hMenu = document.getElementsByClassName('hMenu')[0];
+
+
+const addListTag = document.getElementsByClassName('addListTag')[0];
+
+
+const allListTag = document.getElementsByClassName('allListTag')[0];
+
+
+const changeListTag = document.getElementsByClassName('changeListTag')[0];
+
+
+const startListTag = document.getElementsByClassName('startListTag')[0];
+
+
+const formHolder = document.getElementsByClassName('formHolder')[0];
+
+
+const allItems = document.getElementsByClassName('allItems')[0];
+
+
+const searchingForChange = document.getElementsByClassName('searchingForChange')[0];
+
+
+const searchResults = document.getElementsByClassName('searchResults')[0];
+
+
+const allRadio = document.querySelectorAll("input[type='radio']");
+
+
+const newCreatedData = [...document.getElementsByClassName('newCreatedData')];
+
+
+// код слайдера
+
+let oZdraviiClicked = false;
+
+let startx, scrollLeft, walk;
+
+let startx2, scrollLeft2, walk2;
+
+
+const start = Date.now();
+
+
+
+/* -----------------------------------
+
+---- Конец обьявления переменных ---------------------------------- */
+
+
+
+/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@ обьявляем функции @@@@@@@@@@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@@@@ */
 
     
 
@@ -104,33 +218,9 @@ function namesEndEditor(name){
 
 
 
-
-
-
-//-----headerAnimStart--------
-
-//-----------------------------
-
-
-
-const logoLetters = document.querySelectorAll(".test");
-
-
-
-upSvgHolder.style.opacity = 0;
-
-
-let last_known_scroll_position = 0;
-
-let ticking = false;
-
-
-let deepestPoint;
-
-
 function doSomething(scroll_pos) {
 
-  if(scroll_pos >= 20) {
+  if(scroll_pos >= 120) {
 
 
     let counterForLettersUp = 0;
@@ -178,11 +268,7 @@ upSvgHolder.style.opacity = 1;
 
     }, 1000);
 
-  }
-
-  
-
-  if(deepestPoint>scroll_pos) {
+  } else {
 
 
   let counterForLettersDown = 0;
@@ -238,92 +324,6 @@ upSvgHolder.style.opacity = 0;
 }
 
 
-window.addEventListener('scroll', function(e) {
-
-  last_known_scroll_position = window.scrollY;
-
-
-  if (!ticking) {
-
-    window.requestAnimationFrame(function() {
-
-      doSomething(last_known_scroll_position);
-
-      ticking = false;
-
-    });
-
-
-    ticking = true;
-
-  }
-
-});
-
-
-
-
-
-// ---- headeranim end-----------
-
-//------------------------------
-
-
-
-const pannel = document.getElementsByClassName('pannel')[0];
-
-
-const btnAdd = document.getElementsByClassName('addBtnDiv')[0];
-
-
-const formInputs = document.getElementsByTagName('input');
-
-
-const allLabels = [...document.getElementsByTagName('label')];
-
-
-const allSelects = [...document.getElementsByTagName('select')];
-
-
-const inputForSearch = document.getElementsByClassName('inputForSearch')[0];
-
-
-const sandwich = document.getElementsByClassName('sandwich')[0];
-
-
-const cross = document.getElementsByClassName('cross')[0];
-
-
-const hMenu = document.getElementsByClassName('hMenu')[0];
-
-
-const addListTag = document.getElementsByClassName('addListTag')[0];
-
-
-const allListTag = document.getElementsByClassName('allListTag')[0];
-
-
-const changeListTag = document.getElementsByClassName('changeListTag')[0];
-
-
-const startListTag = document.getElementsByClassName('startListTag')[0];
-
-
-
-const formHolder = document.getElementsByClassName('formHolder')[0];
-
-
-const allItems = document.getElementsByClassName('allItems')[0];
-
-
-const searchingForChange = document.getElementsByClassName('searchingForChange')[0];
-
-
-const searchResults = document.getElementsByClassName('searchResults')[0];
-
-
-const allRadio = document.querySelectorAll("input[type='radio']");
-
 
 
 // функция проверки радио на выбор
@@ -356,71 +356,6 @@ function allowShow(){
 
 // конец
 
-
-
-
-
-
-
-const newCreatedData = [...document.getElementsByClassName('newCreatedData')];
-
-
-
-inputForSearch.addEventListener('keyup', displayMatches);
-
-
-btnAdd.classList.add('hiddening');
-
-
-btnAdd.addEventListener('click', setDataTest);
-
-
-sandwich.addEventListener('click', openingMenu);
-
-
-cross.addEventListener('click', closingMenu);
-
-
-addListTag.addEventListener('click', closingMenuAndAllListField);
-
-
-allListTag.addEventListener('click', closingMenuAndAddingField);
-
-
-changeListTag.addEventListener('click', closingMenuAndGoSearch);
-
-
-startListTag.addEventListener('click', closingMenuAndStartPray);
-
-
-[...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('focus', pushLabelUp), {once: true});
-
-
-[...formInputs].forEach(input=>input.addEventListener('focus', pushLabelUp), {once: true});
-
-
-allRadio.forEach(radio=>radio.addEventListener('change', setSelects));
-
-
-// назначаем слушателей дейтпикерам
-
-
-[...document.querySelectorAll(".datePicker")].forEach(input=>{
-
-input.addEventListener('keydown', dashInsertAuto);
-
-input.addEventListener('blur', validateDate);
-
-});
-
-
-[...document.querySelectorAll('.saintDatePicker')].forEach(input=>{
-
-input.addEventListener('keydown', dashInsertAuto);
-
-input.addEventListener('blur', validateDateforSaintDay);
-
-});
 
 
 //функция автовставки тире
@@ -581,6 +516,10 @@ fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBa
 
 .then(person=>{
 
+
+document.getElementsByTagName('body')[0].scrollTop = 0;
+
+
 document.getElementsByClassName('msgDiv')[0].innerHTML = `${person.other}${person.name} ${addForSex} в синодик ${person.live}!`;
 
 
@@ -593,8 +532,24 @@ document.getElementsByClassName('msgDiv')[0].innerHTML = `${person.other}${perso
 
   addForm.reset();
 
+  btnAdd.classList.add('hiddening');
 
-  // тут надо поднять страницу, скрыть селекты и баттон
+
+  forMaleLive.classList.add('hiddening');
+
+forFemaleLive.classList.add('hiddening');
+
+forMaleDeath.classList.add('hiddening');
+
+forFemaleDeath.classList.add('hiddening');
+
+
+newCreatedData
+
+    .filter(data=>!data.type==radio)
+
+    .forEach(i=>i.disabled=true);
+
 
 
 })
@@ -816,6 +771,10 @@ function showAllInfo(p) {
 function openingMenu() {
 
   hMenu.classList.add('opened');
+
+  
+
+  document.getElementsByTagName('body')[0].scrollTop = 0;
 
   [...document.querySelectorAll('.hml')].forEach((link, i)=>{
 
@@ -1046,7 +1005,9 @@ allItems.classList.remove('hiddening');
 
      </br>
 
-    <h4 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
+    <h3 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
+
+    </br>
 
     </br>
 
@@ -1059,9 +1020,13 @@ allItems.classList.remove('hiddening');
   .map(data=>{
 
 
-  return (`
+  return (`<div class='commonBox'>
 
-    ${data.other} ${namesEndEditor(data.name)}
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
 
   `);
 
@@ -1090,9 +1055,9 @@ allItems.classList.remove('hiddening');
 
      </br>
 
-    <h4 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
+    <h3 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
 
-    </br>
+    </br></br>
 
     <div class='showedPersonsList'>${allNamesArr
 
@@ -1103,9 +1068,13 @@ allItems.classList.remove('hiddening');
   .map(data=>{
 
 
-  return (`
+  return (`<div class='commonBox'>
 
-    ${data.other} ${namesEndEditor(data.name)}
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+   <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
 
   `);
 
@@ -1124,21 +1093,13 @@ allItems.classList.remove('hiddening');
 
 
 
-// код слайдера
-
-
-let startx, scrollLeft, walk;
-
-let startx2, scrollLeft2, walk2;
-
-
 function oZdrStrtHandler(e){
 
   e.preventDefault();
 
   startx = e.pageX - allItems.offsetLeft;
 
-  scrollLeft = allItems.scrollLeft;
+  
 
 }
 
@@ -1149,11 +1110,11 @@ function oZdrMoveHandler(e){
 
   const x = e.pageX - allItems.offsetLeft;
 
-  walk = (x - startx)/2
+  walk = (x - startx)/5
 
-  
+  //sandwich.innerHTML = walk;
 
-  oZdravii.style.transform = `translate(${walk-50}%, -40%)`;
+  oZdravii.style.transform = `translate(${walk-50}%, -40%) scale(.725)`;
 
 }
 
@@ -1163,16 +1124,27 @@ function oZdrEndHandler(e){
 
   e.preventDefault();
 
-  if(walk<5&&walk>-5) {
+  if(walk<1&&walk>-1) {
+
+  
+
+  oZdraviiClicked = true;
 
 
-oZdravii.classList.remove('first');
+  oZdravii.style.transform = 'translate(-50%, 0%) scale(1)';
 
-oZdravii.classList.remove('second');
+  //oZdravii.style.height = 'auto';
 
-oZdravii.classList.remove('zero');
+  oZdravii.style.overflow = 'visible'
 
-oZdravii.classList.add('openedSinodik');
+  oZdravii.style.border = 'none';
+
+  oZdravii.style.backgroundColor = 'transparent';
+
+  oZdravii.style.color = '#ffffff';
+
+  oZdravii.style.top = '50px';
+
 
 pannel.classList.remove('hiddening');
 
@@ -1192,17 +1164,16 @@ setTimeout(()=>pannel.classList.add('slideUp'), 600);
 
   }
 
-  if(walk < 40) {
+  if(walk < -7) {
 
-oZdravii.style.transform = 'translate(-135%, -40%) scale(.9)';
+oZdravii.style.transform = 'translate(-105%, -40%) scale(.6)';
 
 oZdravii.style.filter = 'blur(1px)';
 
 oZdravii.style.zIndex = '90';
 
 
-
-oUpokoenii.style.transform = 'translate(-50%, -40%)';
+oUpokoenii.style.transform = 'translate(-50%, -40%) scale(.725)';
 
 oUpokoenii.style.filter = 'blur(0px)';
 
@@ -1210,7 +1181,7 @@ oUpokoenii.style.zIndex = '95';
 
   }else{
 
-oZdravii.style.transform = 'translate(-50%, -40%)';
+oZdravii.style.transform = 'translate(-50%, -40%) scale(.725)';
 
 oZdravii.style.filter = 'blur(0px)';
 
@@ -1222,16 +1193,6 @@ oZdravii.style.filter = 'blur(0px)';
 }
 
 
-oZdravii.addEventListener('touchstart', oZdrStrtHandler, false);
-
-
-oZdravii.addEventListener('touchmove', oZdrMoveHandler, false);
-
-
-oZdravii.addEventListener('touchend', oZdrEndHandler, false);
-
-
-
 // слушатели для заупокойного
 
 
@@ -1240,8 +1201,6 @@ function oUpokStrtHandler(e){
   e.preventDefault();
 
   startx = e.pageX - allItems.offsetLeft;
-
-  scrollLeft = allItems.scrollLeft;
 
 }
 
@@ -1252,11 +1211,11 @@ function oUpokMoveHandler(e){
 
   const x = e.pageX - allItems.offsetLeft;
 
-  walk = (x - startx)/2
+  walk = (x - startx)/5
 
   
 
-  oUpokoenii.style.transform = `translate(${walk-50}%, -40%)`;
+  oUpokoenii.style.transform = `translate(${walk-50}%, -40%) scale(.725)`;
 
 }
 
@@ -1266,13 +1225,24 @@ function oUpokEndHandler(e){
 
   e.preventDefault();
 
-  if(walk<5&&walk>-5) {
+  if(walk<1&&walk>-1) {
 
-    oUpokoenii.classList.remove('first');
+    
 
-oUpokoenii.classList.remove('second');
+  oUpokoenii.style.transform = 'translate(-50%, 0%) scale(1)';
 
-oUpokoenii.classList.add('openedSinodik');
+  //oUpokoenii.style.height = 'auto';
+
+  oUpokoenii.style.overflow = 'visible'
+
+  oUpokoenii.style.border = 'none';
+
+  oUpokoenii.style.backgroundColor = 'transparent';
+
+  oUpokoenii.style.color = '#ffffff';
+
+  oUpokoenii.style.top = '50px';
+
 
 pannel.classList.remove('hiddening');
 
@@ -1290,16 +1260,16 @@ setTimeout(()=>pannel.classList.add('slideUp'), 600);
 
   }
 
-  if(walk > 40) {
+  if(walk > 7) {
 
-oUpokoenii.style.transform = 'translate(30%, -40%) scale(.9)';
+oUpokoenii.style.transform = 'translate(5%, -40%) scale(.6)';
 
 oUpokoenii.style.filter = 'blur(1px)';
 
 oUpokoenii.style.zIndex = '90';
 
 
-oZdravii.style.transform = 'translate(-50%, -40%)';
+oZdravii.style.transform = 'translate(-50%, -40%) scale(.725)';
 
 oZdravii.style.filter = 'blur(0px)';
 
@@ -1307,7 +1277,7 @@ oZdravii.style.zIndex = '95';
 
   }else{
 
-oUpokoenii.style.transform = 'translate(-50%, -40%)';
+oUpokoenii.style.transform = 'translate(-50%, -40%) scale(.725)';
 
 oUpokoenii.style.filter = 'blur(0px)';
 
@@ -1319,206 +1289,27 @@ oUpokoenii.style.filter = 'blur(0px)';
 
 
 
-oUpokoenii.addEventListener('touchstart', oUpokStrtHandler, false);
-
-
-oUpokoenii.addEventListener('touchmove', oUpokMoveHandler, false);
-
-
-oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
-
-
-// ---------конец слайдера -----
-
-
-
-
-// слушатели панели
-
-
-addIcon.addEventListener('click', fromPannelToAdd);
-
-
-
-closeIcon.addEventListener('click', pannelToClose, false);
-
-
-
-
-/* ---------------------------при загрузке страницы первым делов запрашиваем данные и скрываем все кроме синодиков ----------------------------- */
-
-
-  
-
-formHolder.style.opacity = 0;
-
-searchingForChange.style.opacity = 0;
-
-formHolder.classList.add('hiddening');
-
-searchingForChange.classList.add('hiddening');
-
-hMenu.classList.remove('opened');
-
-allItems.style.opacity = 1;
-
-allItems.classList.remove('hiddening');
-
-
-const start = Date.now();
-
-
-fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`)
-
-.then(data=>data.json())
-
-.then(allNamesArr=>{
-
-  const step = Date.now();
-
-  if(step-start>4000){
-
-document.getElementsByClassName('loader')[0].classList.add('loaderGone');
-
-
-  setTimeout(()=>{
-
-oZdravii.classList.remove('start1');
-
-oUpokoenii.classList.remove('start2');
-
-document.getElementsByClassName('loader')[0].style.display = 'none';
-
-}, 700);
-
-}else{
-
-  setTimeout(()=>{
-
-    document.getElementsByClassName('loader')[0].classList.add('loaderGone');
-
-
-  setTimeout(()=>{
-
-oZdravii.classList.remove('start1');
-
-oUpokoenii.classList.remove('start2');
-
-document.getElementsByClassName('loader')[0].style.display = 'none';
-
-}, 700);
-
-  }, 2500);
-
-}
-
-
-  loadedArr = allNamesArr;
-
-
-  oZdravii.innerHTML = `
-
-     <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h4 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
-
-    </br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о здравии')
-
-  .map(data=>{
-
-
-  return (`
-
-    ${data.other} ${namesEndEditor(data.name)}
-
-  `);
-
-}).join('</br>')}
-
-  </br></br></br></br>+ + +</br></br></br></br>
-
-</div>
-
-`;
-
-
-  oUpokoenii.innerHTML = `
-
-    <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h4 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
-
-    </br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о упокоении')
-
-  .map(data=>{
-
-
-  return (`
-
-    ${data.other} ${namesEndEditor(data.name)}
-
-  `);
-
-}).join('</br>')}</br></br></br></br>+ + +</br></br></br></br></div>
-
-`
-
-
-})
-
-.catch(e=>console.log(e));
-
-
-
-/* ---------------------------конец начальных установок -----------------//////---------------------------------------  */
-
-
 // функция закрытия панели
 
 
 function pannelToClose (){
 
-  if(oZdravii.classList.contains('openedSinodik')) {
+  if(oZdraviiClicked) {
 
-oZdravii.classList.remove('openedSinodik');
+oZdravii.style.transform = 'translate(-50%, -40%) scale(.725)';
 
-oZdravii.classList.add('first');
+  //oZdravii.style.height = '100%';
+
+  oZdravii.style.overflow = 'hidden';
+
+  oZdravii.style.top = '50%';
+
+  oZdravii.style.border = '1px solid #ffffff';
+
+  oZdravii.style.backgroundColor = '#BDC6BC';
+
+  oZdravii.style.color = '#333e4e';
+
 
 oUpokoenii.classList.remove('hiddening');
 
@@ -1536,11 +1327,26 @@ oZdravii.addEventListener('touchmove', oZdrMoveHandler, false);
 
 oZdravii.addEventListener('touchend', oZdrEndHandler, false);
 
+
+  oZdraviiClicked = false;
+
   } else {
 
-oUpokoenii.classList.remove('openedSinodik');
 
-oUpokoenii.classList.add('first');
+oUpokoenii.style.transform = 'translate(-50%, -40%) scale(.725)';
+
+  //oUpokoenii.style.height = '100%';
+
+  oUpokoenii.style.overflow = 'hidden';
+
+  oUpokoenii.style.top = '50%';
+
+  oUpokoenii.style.border = '1px solid #ffffff';
+
+  oUpokoenii.style.backgroundColor = '#BDC6BC';
+
+  oUpokoenii.style.color = '#333e4e';
+
 
 oZdravii.classList.remove('hiddening');
 
@@ -1658,3 +1464,341 @@ setTimeout(()=>{
     alertFon.innerHTML = `<div class='msgDiv'>${msg}</div>`;
 
   }
+
+
+
+
+/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@ конец обьявления функций @@@@@@@@@@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@@@@@ */
+
+
+
+
+/* начальные установки @@@@@@
+
+@@@@@@@&&&&&&@&@&!₽&&&&&&&&&&&
+
+&&&&& */
+
+
+upSvgHolder.style.opacity = 0;
+
+
+btnAdd.classList.add('hiddening');
+
+
+formHolder.style.opacity = 0;
+
+searchingForChange.style.opacity = 0;
+
+formHolder.classList.add('hiddening');
+
+searchingForChange.classList.add('hiddening');
+
+hMenu.classList.remove('opened');
+
+allItems.style.opacity = 1;
+
+allItems.classList.remove('hiddening');
+
+
+/* конец начальных установок @@@@@@
+
+@@@@@@@&&&&&&@&@&!₽&&&&&&&&&&&
+
+&&&&& */
+
+
+
+/* ========================
+
+======== назначение слушателей ==============================
+
+==== */
+
+
+
+window.addEventListener('scroll', function(e) {
+
+  last_known_scroll_position = window.scrollY;
+
+  if (!ticking) {
+
+   window.requestAnimationFrame(function() {
+
+ doSomething(last_known_scroll_position);
+
+      ticking = false;
+
+    });
+
+    ticking = true;
+
+  }
+
+});
+
+
+inputForSearch.addEventListener('keyup', displayMatches);
+
+
+btnAdd.addEventListener('click', setDataTest);
+
+
+sandwich.addEventListener('click', openingMenu);
+
+
+cross.addEventListener('click', closingMenu);
+
+
+addListTag.addEventListener('click', closingMenuAndAllListField);
+
+
+allListTag.addEventListener('click', closingMenuAndAddingField);
+
+
+changeListTag.addEventListener('click', closingMenuAndGoSearch);
+
+
+startListTag.addEventListener('click', closingMenuAndStartPray);
+
+
+[...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('focus', pushLabelUp), {once: true});
+
+
+[...formInputs].forEach(input=>input.addEventListener('focus', pushLabelUp), {once: true});
+
+
+allRadio.forEach(radio=>radio.addEventListener('change', setSelects));
+
+
+// назначаем слушателей дейтпикерам
+
+
+[...document.querySelectorAll(".datePicker")].forEach(input=>{
+
+input.addEventListener('keydown', dashInsertAuto);
+
+input.addEventListener('blur', validateDate);
+
+});
+
+
+[...document.querySelectorAll('.saintDatePicker')].forEach(input=>{
+
+input.addEventListener('keydown', dashInsertAuto);
+
+input.addEventListener('blur', validateDateforSaintDay);
+
+});
+
+
+oZdravii.addEventListener('touchstart', oZdrStrtHandler, false);
+
+
+oZdravii.addEventListener('touchmove', oZdrMoveHandler, false);
+
+
+oZdravii.addEventListener('touchend', oZdrEndHandler, false);
+
+
+
+oUpokoenii.addEventListener('touchstart', oUpokStrtHandler, false);
+
+
+oUpokoenii.addEventListener('touchmove', oUpokMoveHandler, false);
+
+
+oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
+
+
+// ---------конец слайдера -----
+
+
+// слушатели панели
+
+
+addIcon.addEventListener('click', fromPannelToAdd);
+
+
+
+closeIcon.addEventListener('click', pannelToClose, false);
+
+
+
+/* ========================
+
+======== конец назначение слушателей ==============================
+
+==== */
+
+
+
+/* тут начинается работа work begins here */
+
+
+
+/* ---------------------------при загрузке страницы первым делов запрашиваем данные ----------------------------- */
+
+
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+  const step = Date.now();
+
+  if(step-start>4000){
+
+document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+
+  setTimeout(()=>{
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+document.getElementsByClassName('loader')[0].style.display = 'none';
+
+}, 700);
+
+}else{
+
+  setTimeout(()=>{
+
+    document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+
+  setTimeout(()=>{
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+document.getElementsByClassName('loader')[0].style.display = 'none';
+
+}, 700);
+
+  }, 2500);
+
+}
+
+
+  loadedArr = allNamesArr;
+
+
+  oZdravii.innerHTML = `
+
+     <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+     </br>
+
+    <h3 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
+
+    </br>
+
+    </br>
+
+    <div class='showedPersonsList'>${allNamesArr
+
+  .sort()
+
+  .filter(data=>data.live == 'о здравии')
+
+  .map(data=>{
+
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}
+
+  </br></br></br></br>+ + +</br></br></br></br>
+
+</div>
+
+`;
+
+
+  oUpokoenii.innerHTML = `
+
+    <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+     </br>
+
+    <h3 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
+
+    </br></br>
+
+    <div class='showedPersonsList'>${allNamesArr
+
+  .sort()
+
+  .filter(data=>data.live == 'о упокоении')
+
+  .map(data=>{
+
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}</br></br></br></br>+ + +</br></br></br></br></div>
+
+`
+
+
+})
+
+.catch(e=>console.log(e));
+
+
+
+
+
+
+//  +++КОНЕЦ И БОГУ СЛАВА!+++ //
