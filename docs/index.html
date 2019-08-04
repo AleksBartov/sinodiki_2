@@ -722,21 +722,27 @@
   
          <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
   
-                 <path d="M54,40 H42 V60 H58 V44 M62,36 L50,48" />
+                 <path d="M50,40 V60 M50,40 L55,45 M50,40 L45,45" />
   
                </g>
   
              </svg>
+  
   
             <svg id='playIcon' viewBox='0 0 100 100'>
   
          <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
   
-                 <path d="M40,40 L60,50 L40,60 z" />
+               <path id='playIconFirstPath' d="M40,40 L60,50 L40,60 L40,50 z" />
+  
+               <path class='hiddening' d="M40,40 H48 V60 H40 z" />
+  
+               <path class='hiddening' d="M60,40 V60 H52 V40 z" />
   
                </g>
   
              </svg>
+  
   
             <svg id='closeIcon'  viewBox='0 0 100 100'>
   

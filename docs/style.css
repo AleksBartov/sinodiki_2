@@ -1081,6 +1081,8 @@ td {
 
   z-index         : 110;
 
+  overflow        : hidden;
+
 }
 
 
@@ -1105,6 +1107,8 @@ td {
 
   transform: translateY(-50%);
 
+  transition      : all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
   display: inline-block;
 
   //background-color: red;
@@ -1114,6 +1118,19 @@ td {
   padding: 0;
 
 }
+
+
+.pauseMode {
+
+  border: 1px solid #333e4e;
+
+  background-color: #BDC6BC;
+
+  box-shadow: inset -0px 0 5px 0 #333e4e, inset  0px 0 5px 0 #333e4e;
+
+  transform: translateY(-50%) scale(.6);
+
+} 
 
 
 .invsbLink {
@@ -1131,11 +1148,25 @@ td {
 
   margin: -3px auto;
 
+  transition      : all 3s cubic-bezier(0.19, 1, 0.22, 1);
+
 } 
 
 
 .commonBox_name {
 
+  font-size: 1.3rem;
+
+  font-weight: 400;
+
+}
+
+
+.fontSizePlus {
+
+  font-size: 1.7rem;
+
+  font-weight: 600;
 
 }
 
@@ -1147,6 +1178,7 @@ td {
   margin-top: -3px;
 
 }
+
 
 
 
@@ -1238,3 +1270,4 @@ td {
 
 
 }
+

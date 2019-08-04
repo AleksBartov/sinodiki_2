@@ -1,3 +1,40 @@
+/*
+
+     планы:
+
+1) страницу приветствия/регистрации/входа
+
+  хранить часть данных в локалСтор и для автозагрузки сравнивать с данными в Моби
+
+
+2) режим редактирования
+
+
+3) режим поминовения
+
+
+4) адаптивный дизайн
+
+
+5) заменить кнопку редактирования панели на информацию о синодике (кол-во, группы и т.д.)
+
+
+6) вставить в форму поле "родство/связь"
+
+
+7) решить в полях с датами формат ввода
+
+
+8) скорость поминовения
+
+
+9) гаснет экран при режиме поминовения
+
+
+*/
+
+
+
 //localStorage.clear();
 
 
@@ -18,6 +55,10 @@ const myKey = 'apiKey=2p8S-XYXJGzaPbRYMNWXb24YTrqsbZdV';
 
 
 const endings = [
+
+  ['дор', 'дора'],
+
+  ['нья', 'ньи'],
 
   ['арк', 'арка'],
 
@@ -157,6 +198,9 @@ const searchResults = document.getElementsByClassName('searchResults')[0];
 const allRadio = document.querySelectorAll("input[type='radio']");
 
 
+const pannelsSVG = [...document.querySelectorAll(".pannel svg")];
+
+
 const newCreatedData = [...document.getElementsByClassName('newCreatedData')];
 
 
@@ -170,6 +214,15 @@ let startx2, scrollLeft2, walk2;
 
 
 const start = Date.now();
+
+
+let myReq;
+
+
+   const requestAn = window.requestAnimationFrame;
+
+
+   const cancelReq = window.cancelAnimationFrame;
 
 
 
@@ -546,9 +599,9 @@ forFemaleDeath.classList.add('hiddening');
 
 newCreatedData
 
-    .filter(data=>data.type != 'radio')
+  .filter(d=>d.type != 'radio')
 
-    .forEach(i=>i.disabled=true);
+  .forEach(i=>i.disabled=true);
 
 
 
@@ -770,9 +823,46 @@ function showAllInfo(p) {
 
 function openingMenu() {
 
+
+  cancelReq(myReq);
+
+ 
+
   hMenu.classList.add('opened');
 
+
+
+[...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.add('hiddening'));
+
+
+document.querySelector('#playIconFirstPath').classList.remove('hiddening');
+
+
+
+removeEventListener('scroll', getCenterOfPage);
+
+   
+
+   [...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 1;
+
+   div.style.margin = '-3px auto';
+
+});
+
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.remove('fontSizePlus');
+
+});
+
   
+
+pannelsSVG.forEach(icon=>icon.classList.remove('pauseMode'));
+
 
   document.getElementsByTagName('body')[0].scrollTop = 0;
 
@@ -1294,6 +1384,43 @@ oUpokoenii.style.filter = 'blur(0px)';
 
 function pannelToClose (){
 
+
+
+cancelReq(myReq);
+
+
+[...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.add('hiddening'));
+
+
+document.querySelector('#playIconFirstPath').classList.remove('hiddening');
+
+
+  pannelsSVG.forEach(icon=>icon.classList.remove('pauseMode'));
+
+
+
+removeEventListener('scroll', getCenterOfPage);
+
+   
+
+   [...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 1;
+
+   div.style.margin = '-3px auto';
+
+});
+
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.remove('fontSizePlus');
+
+});
+
+  
+
   if(oZdraviiClicked) {
 
 oZdravii.style.transform = 'translate(-50%, -40%) scale(.725)';
@@ -1378,7 +1505,42 @@ oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
 
 function fromPannelToAdd() {
 
-  pannel.classList.remove('slideUp');
+
+cancelReq(myReq);
+
+
+[...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.add('hiddening'));
+
+
+document.querySelector('#playIconFirstPath').classList.remove('hiddening');
+
+
+pannelsSVG.forEach(icon=>icon.classList.remove('pauseMode'));
+
+
+removeEventListener('scroll', getCenterOfPage);
+
+   
+
+   [...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 1;
+
+   div.style.margin = '-3px auto';
+
+});
+
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.remove('fontSizePlus');
+
+});
+
+
+
+pannel.classList.remove('slideUp');
 
   
 
@@ -1464,6 +1626,262 @@ setTimeout(()=>{
     alertFon.innerHTML = `<div class='msgDiv'>${msg}</div>`;
 
   }
+
+
+
+// функция плей --------------
+
+
+
+function playMode () {
+
+  this.classList.toggle('pauseMode');
+
+
+  //console.log(oZdravii.getBoundingClientRect());
+
+
+[...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.toggle('hiddening'));
+
+
+  if(this.classList.contains('pauseMode')) {
+
+
+[...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 0;
+
+   div.style.margin = '20px auto';
+
+});
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.add('fontSizePlus');
+
+});
+
+
+addEventListener('scroll', getCenterOfPage);
+
+
+    let counterForLettersUp = 0;
+
+    [...logoLetters].forEach((l, index)=>{
+
+
+  counterForLettersUp = `${index}00`;
+
+  setTimeout(()=>{
+
+    l.style.opacity = 0;
+
+    l.style.transform = 'scale(.2) translateY(-70%)';
+
+    l.style.filter = 'blur(5px)';
+
+  }, counterForLettersUp);
+
+});
+
+
+deadLine0.classList.remove('scrollUp1');
+
+deadLine1.classList.remove('scrollUp1');
+
+deadLine2.classList.remove('scrollUp2');
+
+deadLine3.classList.remove('scrollUp3');
+
+    liveLine0.classList.add('scrollDown1');
+
+liveLine1.classList.add('scrollDown1');
+
+liveLine2.classList.add('scrollDown2');
+
+liveLine3.classList.add('scrollDown3');
+
+
+    setTimeout(()=>{
+
+      downSvgHolder.style.opacity = 0;
+
+upSvgHolder.style.opacity = 1;
+
+    }, 1000);
+
+  } else {
+
+
+   cancelReq(myReq);
+
+
+   removeEventListener('scroll', getCenterOfPage);
+
+   
+
+   [...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 1;
+
+   div.style.margin = '-3px auto';
+
+});
+
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.remove('fontSizePlus');
+
+});
+
+
+
+  let counterForLettersDown = 0;
+
+    [...logoLetters].forEach((l, index)=>{
+
+
+  counterForLettersDown = `${index}00`;
+
+  setTimeout(()=>{
+
+    l.style.opacity = 1;
+
+    l.style.transform = 'scale(1) translateY(0%)';
+
+    l.style.filter = 'blur(0px)';
+
+  }, counterForLettersDown);
+
+});
+
+
+liveLine0.classList.remove('scrollDown1');
+
+liveLine1.classList.remove('scrollDown1');
+
+liveLine2.classList.remove('scrollDown2');
+
+liveLine3.classList.remove('scrollDown3');
+
+
+deadLine0.classList.add('scrollUp1');
+
+deadLine1.classList.add('scrollUp1');
+
+deadLine2.classList.add('scrollUp2');
+
+deadLine3.classList.add('scrollUp3');
+
+
+setTimeout(()=>{
+
+      downSvgHolder.style.opacity = 1;
+
+upSvgHolder.style.opacity = 0;
+
+    }, 1000);
+
+  }
+
+}
+
+
+// конец плей фции -------------
+
+
+// ---- функция скроллинга вверх--------------
+
+
+
+  function scrollToTop() {
+
+
+   const oZdrPlay = document.getElementsByClassName('showedPersonsList')[0];
+
+
+   const oUpkPlay = document.getElementsByClassName('showedPersonsList')[1];
+
+
+   if(oZdraviiClicked) {
+
+   let counter = 0;
+
+   function scrollSinodikOZdravii(){
+
+    window.scrollTo({top: counter, behavior: 'smooth'});
+
+    counter++
+
+if(counter<oZdrPlay.clientHeight)
+
+     myReq = requestAn(scrollSinodikOZdravii);
+
+     }
+
+myReq = requestAn(scrollSinodikOZdravii);
+
+
+//cancelReq(myReq);
+
+
+    } else {
+
+
+      let counter = 0;
+
+   function scrollSinodikOUpokoenii(){
+
+    window.scrollTo({top: counter, behavior: 'smooth'});
+
+    counter++
+
+if(counter<oUpkPlay.clientHeight)
+
+myReq = requestAn(scrollSinodikOUpokoenii);
+
+     }
+
+myReq = requestAn(scrollSinodikOUpokoenii);
+
+//cancelReq(myReq);
+
+    }
+
+  }
+
+
+
+// ------- режим поминовения. определяет если в центре ---------------
+
+
+function getCenterOfPage() {
+
+[...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+  
+
+  if((div.offsetTop-window.scrollY) < (screen.height/8)){
+
+div.style.opacity = 0; 
+
+ } else if((div.offsetTop-window.scrollY) > (screen.height/2.5)){
+
+div.style.opacity = 0; 
+
+ } else {
+
+  div.style.opacity = 1;
+
+ }
+
+});
+
+}
+
 
 
 
@@ -1629,7 +2047,15 @@ addIcon.addEventListener('click', fromPannelToAdd);
 
 
 
-closeIcon.addEventListener('click', pannelToClose, false);
+closeIcon.addEventListener('click', pannelToClose);
+
+
+
+playIcon.addEventListener('click', playMode);
+
+
+
+editIcon.addEventListener('click', scrollToTop);
 
 
 
