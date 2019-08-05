@@ -28,6 +28,105 @@ html {
 }
 
 
+
+#pauseExitPlay {
+
+  position: fixed;
+
+  //top: 0;
+
+  //left: 0;
+
+  bottom: 20px;
+
+  //right: 0;
+
+  width: 100%;
+
+  //height: 60px;
+
+  z-index: 400;
+
+  //left: 50%;
+
+  //transform: translateX(-50%);
+
+  opacity: 1;
+
+  //visibility: hidden;
+
+  transition: all 1.3s cubic-bezier(0.19, 1, 0.22, 1);
+
+}
+
+
+#pauseExitPlay > *{
+
+  border: 1px solid #BDC6BC;
+
+  border-radius: 3px;
+
+  color: #ffffff;
+
+  padding: 10px 0px;
+
+  font-size: 1rem;
+
+  text-align: center;
+
+  //height: 40px;
+
+}
+
+
+#modePlayPauseBtn {
+
+  float: left;
+
+  color: #ffffff;
+
+  margin-left: 20px;
+
+  width: 45%;
+
+  overflow: hidden;
+
+}
+
+
+#modePlayPauseBtn >  {
+
+  text-align: center;
+
+}
+
+
+#modePlayPauseBtn > span {
+
+  //height: 100%;
+
+  //border-right: 1px solid #BDC6BC;
+
+  width: 100%;
+
+  float: left;
+
+}
+
+
+#pauseExitPlay > span {
+
+  float: right;
+
+  color: #ffffff;
+
+  margin-right: 20px;
+
+  width: 25%;
+
+}
+
+
 .hiddenAlert {
 
   background-color: rgba(0,0,0,.9);
@@ -1086,11 +1185,13 @@ td {
 }
 
 
+
 .slideUp {
 
   transform       : translateX(-50%) translateY(0%);
 
 }
+
 
 
 .pannel > svg {
@@ -1118,6 +1219,7 @@ td {
   padding: 0;
 
 }
+
 
 
 .pauseMode {
@@ -1270,4 +1372,3 @@ td {
 
 
 }
-

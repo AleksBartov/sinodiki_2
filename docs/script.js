@@ -54,6 +54,10 @@
 const myKey = 'apiKey=2p8S-XYXJGzaPbRYMNWXb24YTrqsbZdV';
 
 
+let speed = 16;
+
+
+
 const endings = [
 
   ['дор', 'дора'],
@@ -138,10 +142,14 @@ const logoLetters = document.querySelectorAll(".test");
 
 let last_known_scroll_position = 0;
 
-let ticking = false;
+let ticking = false, playModeStart = false;
 
 
-let deepestPoint;
+let pausePressed = false;
+
+
+let deepestPoint, lastCounterState;
+
 
 
 const pannel = document.getElementsByClassName('pannel')[0];
@@ -223,6 +231,8 @@ let myReq;
 
 
    const cancelReq = window.cancelAnimationFrame;
+
+
 
 
 
@@ -371,8 +381,6 @@ upSvgHolder.style.opacity = 0;
     }, 1000);
 
   }
-
-  deepestPoint = scroll_pos;
 
 }
 
@@ -823,6 +831,8 @@ function showAllInfo(p) {
 
 function openingMenu() {
 
+
+  playModeStart = false;
 
   cancelReq(myReq);
 
@@ -1385,6 +1395,7 @@ oUpokoenii.style.filter = 'blur(0px)';
 function pannelToClose (){
 
 
+playModeStart = false;
 
 cancelReq(myReq);
 
@@ -1504,6 +1515,9 @@ oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
 
 
 function fromPannelToAdd() {
+
+
+playModeStart = false;
 
 
 cancelReq(myReq);
@@ -1629,6 +1643,49 @@ setTimeout(()=>{
 
 
 
+// ----- показ кнопки в режиме поминовения --------------------
+
+
+
+    function showPauseInPlayMode () {
+
+pauseExitPlay.classList.toggle('hiddening');
+
+}
+
+
+// ----- стоп/старт автоскрлл и показ кнопки плей -----------------
+
+
+   function stopPlayAndShowBtn () {
+
+
+     if(playModeStart) {
+
+       cancelReq(myReq);
+
+       playModeStart = false;
+
+       pausePressed = true;
+
+       modePlayPauseBtn.innerHTML = 'поминать';
+
+     } else {
+
+       scrollToTop();
+
+       playModeStart = true;
+
+       pausePressed = false;
+
+       modePlayPauseBtn.innerHTML = 'пауза';
+
+     }
+
+}
+
+
+
 // функция плей --------------
 
 
@@ -1645,6 +1702,28 @@ function playMode () {
 
 
   if(this.classList.contains('pauseMode')) {
+
+
+    playModeStart = true;
+
+
+    scrollToTop();
+
+
+    setTimeout(()=>pauseExitPlay.classList.remove('hiddening'), 1500);
+
+
+setTimeout(()=>pauseExitPlay.classList.add('hiddening'), 4500);
+
+
+    setTimeout(()=>{
+
+pannel.classList.remove('slideUp');
+
+
+[...document.getElementsByClassName('showedPersonsList')].forEach(d=>d.addEventListener('touchstart', showPauseInPlayMode));
+
+}, 600);
 
 
 [...document.querySelectorAll('.commonBox')].forEach(div=>{
@@ -1711,17 +1790,22 @@ upSvgHolder.style.opacity = 1;
 
     }, 1000);
 
+
+
   } else {
 
 
-   cancelReq(myReq);
+   playModeStart = false;
 
+
+
+   cancelReq(myReq);
 
    removeEventListener('scroll', getCenterOfPage);
 
    
 
-   [...document.querySelectorAll('.commonBox')].forEach(div=>{
+[...document.querySelectorAll('.commonBox')].forEach(div=>{
 
    div.style.opacity = 1;
 
@@ -1795,7 +1879,7 @@ upSvgHolder.style.opacity = 0;
 
 // ---- функция скроллинга вверх--------------
 
-
+  
 
   function scrollToTop() {
 
@@ -1806,15 +1890,34 @@ upSvgHolder.style.opacity = 0;
    const oUpkPlay = document.getElementsByClassName('showedPersonsList')[1];
 
 
+   // первым делом нужно понять использовать свежий ( freshCounter ) или последний ( lastCounterState )
+
+
+  // по умолчанию используем фрэш
+
+  // но если нажата кнопка паузы (pausePressed), то пользуем ласт
+
+
+   let startPlay = Date.now();
+
+   let startPosition = window.scrollY;
+
+
    if(oZdraviiClicked) {
 
    let counter = 0;
 
    function scrollSinodikOZdravii(){
 
+
+   counter = ((Date.now()-startPlay)/speed)+startPosition;
+
     window.scrollTo({top: counter, behavior: 'smooth'});
 
-    counter++
+
+   lastCounterState = counter;
+
+ 
 
 if(counter<oZdrPlay.clientHeight)
 
@@ -1835,9 +1938,14 @@ myReq = requestAn(scrollSinodikOZdravii);
 
    function scrollSinodikOUpokoenii(){
 
+    counter = ((Date.now()-startPlay)/speed)+startPosition;
+
     window.scrollTo({top: counter, behavior: 'smooth'});
 
-    counter++
+
+  lastCounterState = counter;
+
+    
 
 if(counter<oUpkPlay.clientHeight)
 
@@ -1879,6 +1987,100 @@ div.style.opacity = 0;
  }
 
 });
+
+}
+
+
+
+// ----- выход из режима поминовения --------
+
+
+function closePlayMode() {
+
+   playModeStart = false;
+
+
+   cancelReq(myReq);
+
+   removeEventListener('scroll', getCenterOfPage);
+
+   
+
+[...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+   div.style.opacity = 1;
+
+   div.style.margin = '-3px auto';
+
+});
+
+
+
+[...document.querySelectorAll('.commonBox_name')].forEach(div=>{
+
+   div.classList.remove('fontSizePlus');
+
+});
+
+
+
+  let counterForLettersDown = 0;
+
+    [...logoLetters].forEach((l, index)=>{
+
+
+  counterForLettersDown = `${index}00`;
+
+  setTimeout(()=>{
+
+    l.style.opacity = 1;
+
+    l.style.transform = 'scale(1) translateY(0%)';
+
+    l.style.filter = 'blur(0px)';
+
+  }, counterForLettersDown);
+
+});
+
+
+liveLine0.classList.remove('scrollDown1');
+
+liveLine1.classList.remove('scrollDown1');
+
+liveLine2.classList.remove('scrollDown2');
+
+liveLine3.classList.remove('scrollDown3');
+
+
+deadLine0.classList.add('scrollUp1');
+
+deadLine1.classList.add('scrollUp1');
+
+deadLine2.classList.add('scrollUp2');
+
+deadLine3.classList.add('scrollUp3');
+
+
+setTimeout(()=>{
+
+      downSvgHolder.style.opacity = 1;
+
+upSvgHolder.style.opacity = 0;
+
+    }, 1000);
+
+
+pauseExitPlay.classList.add('hiddening');
+
+
+pannel.classList.add('slideUp');
+
+
+  playIcon.classList.remove('pauseMode');
+
+
+[...document.getElementsByClassName('showedPersonsList')].forEach(d=>d.removeEventListener('touchstart', showPauseInPlayMode));
 
 }
 
@@ -1962,6 +2164,12 @@ window.addEventListener('scroll', function(e) {
   }
 
 });
+
+
+modePlayPauseBtn.addEventListener('click', stopPlayAndShowBtn);
+
+
+modePlayCloseBtn.addEventListener('click', closePlayMode);
 
 
 inputForSearch.addEventListener('keyup', displayMatches);
@@ -2055,7 +2263,7 @@ playIcon.addEventListener('click', playMode);
 
 
 
-editIcon.addEventListener('click', scrollToTop);
+//editIcon.addEventListener('click', scrollToTop);
 
 
 
