@@ -151,6 +151,8 @@ const logoLetters = document.querySelectorAll(".test");
 
 let last_known_scroll_position = 0;
 
+let countSearched;
+
 let ticking = false, playModeStart = false;
 
 
@@ -848,9 +850,43 @@ searchResults.innerHTML = html;
 // кнопка закрыть формы редактирования --------
 
 
-function closeItemSearched(e){
+function closeItemSearched(){
 
-  [...document.querySelectorAll('.searchedItem')].forEach(i=>i.classList.remove('formToEdit'));
+  [...document.querySelectorAll('.searchedItem')].filter(i=>i.classList.contains('formToEdit')).forEach(i=>{
+
+i.classList.remove('formToEdit');
+
+
+  i.innerHTML = loadedArr
+
+        .filter(p=>p.count==countSearched)
+
+        .map(person=>{
+
+         return `
+
+  <div>${person.other}</br>${person.name}</br>${person.surname}
+
+  </div>
+
+  <div>${person.comment}</div>
+
+      `
+
+       });
+
+});
+
+
+
+setTimeout(()=>{
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform, false));
+
+},0);
+
+
+
 
 }
 
@@ -873,6 +909,8 @@ window.scrollTo({top: 0, behavior: 'smooth'});
 this.innerHTML = loadedArr
 
         .filter(p=>p.count==this.id).map(p=>{
+
+   countSearched = p.count;
 
    return `
 
@@ -2679,4 +2717,3 @@ document.getElementsByClassName('loader')[0].style.display = 'none';
 
 
 //  +++КОНЕЦ И БОГУ СЛАВА!+++ //
-
