@@ -10,13 +10,7 @@
 2) режим редактирования
 
 
-3) режим поминовения
-
-
 4) адаптивный дизайн
-
-
-5) заменить кнопку редактирования панели на информацию о синодике (кол-во, группы и т.д.)
 
 
 6) вставить в форму поле "родство/связь"
@@ -29,6 +23,17 @@
 
 
 9) гаснет экран при режиме поминовения
+
+
+*/
+
+
+/* main colors:
+
+
+#CB3C25 = rgba(203, 60, 37,.5)
+
+#01142F = rgba(1, 20, 47,.5)
 
 
 */
@@ -54,11 +59,15 @@
 const myKey = 'apiKey=2p8S-XYXJGzaPbRYMNWXb24YTrqsbZdV';
 
 
-let speed = 16;
+let speed = 19;  /* чем меньше число, тем выше скорость */
 
 
 
 const endings = [
+
+  ['рья', 'рьи'],
+
+  ['вел', 'вла'],
 
   ['дор', 'дора'],
 
@@ -148,6 +157,9 @@ let ticking = false, playModeStart = false;
 let pausePressed = false;
 
 
+let bckgrnd;
+
+
 let deepestPoint, lastCounterState;
 
 
@@ -173,7 +185,7 @@ const inputForSearch = document.getElementsByClassName('inputForSearch')[0];
 const sandwich = document.getElementsByClassName('sandwich')[0];
 
 
-const cross = document.getElementsByClassName('cross')[0];
+const cross = document.getElementsByClassName('cross')[1];
 
 
 const hMenu = document.getElementsByClassName('hMenu')[0];
@@ -186,9 +198,6 @@ const allListTag = document.getElementsByClassName('allListTag')[0];
 
 
 const changeListTag = document.getElementsByClassName('changeListTag')[0];
-
-
-const startListTag = document.getElementsByClassName('startListTag')[0];
 
 
 const formHolder = document.getElementsByClassName('formHolder')[0];
@@ -798,9 +807,29 @@ function displayMatches() {
 
   const personSurname = person.surname.replace(regex, `<span class='yellow'>${this.value}</span>`);
 
+
+  if(person.live==='о здравии'){
+
+     bckgrnd = 'rgba(203, 60, 37,.8)'
+
+  } else {
+
+     bckgrnd = 'rgba(1, 20, 47,.8)'
+
+  }
+
+
   return `
 
-      <div class='searchedItem' onclick='showAllInfo(${person})'>${personName} ${personSurname}</div>
+      <div id='${person.count}' class='searchedItem' style='border-left: 10px solid ${bckgrnd}' >
+
+  <div>${person.other}</br>${personName}</br>${personSurname}
+
+  </div>
+
+  <div>${person.comment}</div>
+
+  </div>
 
   `;
 
@@ -808,18 +837,166 @@ function displayMatches() {
 
 searchResults.innerHTML = html;
 
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform, false));
+
+
 }
 
 
 
-function showAllInfo(p) {
+// кнопка закрыть формы редактирования --------
 
-  console.log(p);
 
-  alert(p)
+function closeItemSearched(e){
+
+  [...document.querySelectorAll('.searchedItem')].forEach(i=>i.classList.remove('formToEdit'));
 
 }
 
+
+
+//---функция открытия формы редактирования---------
+
+
+
+function showEditform() {
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.removeEventListener('click', showEditform, false));
+
+
+window.scrollTo({top: 0, behavior: 'smooth'});
+
+  this.classList.add('formToEdit');
+
+this.innerHTML = loadedArr
+
+        .filter(p=>p.count==this.id).map(p=>{
+
+   return `
+
+<button id='closeSearchedItem' onclick='closeItemSearched()'>закрыть</button>
+
+<section class='foundPersonData'>
+
+<h3>${p.other} ${p.name} ${p.surname}</h3>
+
+</br>
+
+<span class='formItem invsbLink'>В синодик о: </span>
+
+<select class='formItem invsbLink'>
+
+    <option value='${p.live}'>${p.live=='о здравии' ? 'здравии' : 'упокоении'}</option>
+
+    <option value='${p.live=='о здравии' ? 'о упокоении' : 'о здравии'}'>${p.live=='о здравии' ? 'упокоении' : 'здравии'}</option>
+
+  </select>
+
+</br>
+
+<select class='formItem invsbLink'>
+
+    <option value='${p.other[0]}'>${p.other[0]}</option>
+
+  </select>
+
+  <select class='formItem invsbLink'>
+
+    <option value='${p.other[1]}'>${p.other[1]}</option>
+
+  </select>
+
+</br>
+
+
+<span class='formItem invsbLink'>Имя: </span><input class='formItem invsbLink' value='${p.name}' />
+
+</br>
+
+<span class='formItem invsbLink'>Отчество: </span><input class='formItem invsbLink' value='${p.fathername}' />
+
+</br>
+
+<span class='formItem invsbLink'>Фамилия: </span><input class='formItem invsbLink' value='${p.surname}' />
+
+</br>
+
+<span class='formItem invsbLink'>Пол: </span>
+
+<select class='formItem invsbLink'>
+
+    <option value='${p.sex}'>${p.sex=='муж' ? 'мужской' : 'женский'}</option>
+
+    <option value='${p.sex=='муж' ? 'жен' : 'муж'}'>${p.sex=='муж' ? 'женский' : 'мужской'}</option>
+
+  </select>
+
+</br>
+
+<span class='formItem invsbLink'>Дата рождения: </span><input class='formItem invsbLink' value='${p.dateOfBirth}' />
+
+</br>
+
+<span class='formItem invsbLink'>Дата крещения: </span><input class='formItem invsbLink' value='${p.dateOfBapt}' />
+
+</br>
+
+<span class='formItem invsbLink'>Именины: </span><input class='formItem invsbLink' value='${p.dateOfSaint}' />
+
+</br>
+
+<span class='formItem invsbLink'>Комментарий: </span>
+
+<textarea class='formItem invsbLink' rows="10" cols="50">${p.comment}</textarea>
+
+   </br>
+
+</section>
+
+`
+
+});
+
+
+/*
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+*/
+
+
+
+
+setTimeout(()=>{
+
+[...document.querySelectorAll('.formItem')].forEach((el, i)=>{
+
+    const time = `${i++}00`;
+
+    setTimeout(()=>el.classList.remove('invsbLink'), time);
+
+  });
+
+}, 0);
+
+
+}
 
 
 
@@ -832,9 +1009,10 @@ function showAllInfo(p) {
 function openingMenu() {
 
 
-  playModeStart = false;
+  pannelToClose();
 
-  cancelReq(myReq);
+
+  closePlayMode();
 
  
 
@@ -846,10 +1024,6 @@ function openingMenu() {
 
 
 document.querySelector('#playIconFirstPath').classList.remove('hiddening');
-
-
-
-removeEventListener('scroll', getCenterOfPage);
 
    
 
@@ -980,55 +1154,7 @@ formHolder.classList.add('hiddening');
 hMenu.classList.remove('opened');
 
 
-console.log(loadedArr)
-
 }
-
-
-
-
-
-
-
-// открытие поминовения
-
-
-function closingMenuAndStartPray() {
-
-
-  [...document.querySelectorAll('.hml')].forEach(link=>{
-
-link.classList.remove('activLink');
-
-link.classList.add('invsbLink')
-
-});
-
-
-
-this.classList.add('activLink');
-
-
-  allItems.style.opacity = 0;
-
-searchingForChange.style.opacity = 0;
-
-  formHolder.style.opacity = 0;
-
-allItems.classList.add('hiddening');
-
-searchingForChange.classList.add('hiddening');
-
-formHolder.classList.add('hiddening');
-
-hMenu.classList.remove('opened');
-
-
-}
-
-
-
-
 
 
 
@@ -1509,124 +1635,171 @@ oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
 
 
 
-
 // функция перехода от панели к форме
+
 
 
 
 function fromPannelToAdd() {
 
 
+
 playModeStart = false;
+
 
 
 cancelReq(myReq);
 
 
+
 [...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.add('hiddening'));
+
 
 
 document.querySelector('#playIconFirstPath').classList.remove('hiddening');
 
 
+
 pannelsSVG.forEach(icon=>icon.classList.remove('pauseMode'));
+
 
 
 removeEventListener('scroll', getCenterOfPage);
 
+
    
+
 
    [...document.querySelectorAll('.commonBox')].forEach(div=>{
 
+
    div.style.opacity = 1;
+
 
    div.style.margin = '-3px auto';
 
+
 });
+
 
 
 
 [...document.querySelectorAll('.commonBox_name')].forEach(div=>{
 
+
    div.classList.remove('fontSizePlus');
 
+
 });
+
 
 
 
 pannel.classList.remove('slideUp');
 
+
   
 
+
 setTimeout(()=>{
+
 
   document.getElementsByClassName('fromToFon')[0].classList.add('fromToFonStep1');
 
 
+
 setTimeout(()=>{
+
 
 [...document.querySelectorAll('.hml')].forEach(link=>{
 
+
 link.classList.remove('activLink');
+
 
 link.classList.add('invsbLink')
 
+
 });
+
 
 
 document.getElementsByClassName('addListTag')[0].classList.add('activLink');
 
 
+
 allItems.style.opacity = 0;
+
 
 searchingForChange.style.opacity = 0;
 
+
 allItems.classList.add('hiddening');
+
 
 searchingForChange.classList.add('hiddening');
 
+
   formHolder.style.opacity = 1;
 
+
 formHolder.classList.remove('hiddening');
+
 
 }, 500);
 
 
+
 setTimeout(()=>{
+
 
   document.getElementsByClassName('fromToFon')[0].classList.add('fromToFonStep2');
 
+
 }, 900);
+
 
 
 setTimeout(pannelToClose, 400);
 
 
+
 }, 500);
+
 
 
 
 setTimeout(()=>{
 
+
   document.getElementsByClassName('fromToFon')[0].classList.add('hiddening');
+
 
 
 document.getElementsByClassName('fromToFon')[0].classList.remove('fromToFonStep1');
 
 
+
 document.getElementsByClassName('fromToFon')[0].classList.remove('fromToFonStep2');
+
 
 
 setTimeout(()=>{
 
+
   document.getElementsByClassName('fromToFon')[0].classList.remove('hiddening');
 
+
 }, 4000);
+
 
 }, 2500);
 
 
+
 }
+
+
 
 
 
@@ -1649,7 +1822,9 @@ setTimeout(()=>{
 
     function showPauseInPlayMode () {
 
-pauseExitPlay.classList.toggle('hiddening');
+modePlayPauseBtn.classList.toggle('invsbLink');
+
+modePlayCloseBtn.classList.toggle('invsbLink');
 
 }
 
@@ -1710,10 +1885,22 @@ function playMode () {
     scrollToTop();
 
 
-    setTimeout(()=>pauseExitPlay.classList.remove('hiddening'), 1500);
+    setTimeout(()=>{
+
+      modePlayPauseBtn.classList.remove('invsbLink');
+
+modePlayCloseBtn.classList.remove('invsbLink');
+
+    }, 1500);
 
 
-setTimeout(()=>pauseExitPlay.classList.add('hiddening'), 4500);
+setTimeout(()=>{
+
+   modePlayPauseBtn.classList.add('invsbLink');
+
+modePlayCloseBtn.classList.add('invsbLink');
+
+}, 4500);
 
 
     setTimeout(()=>{
@@ -2000,6 +2187,12 @@ function closePlayMode() {
    playModeStart = false;
 
 
+   window.scrollTo({top: 0, behavior: 'smooth'});
+
+
+   [...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.toggle('hiddening'));
+
+
    cancelReq(myReq);
 
    removeEventListener('scroll', getCenterOfPage);
@@ -2071,7 +2264,12 @@ upSvgHolder.style.opacity = 0;
     }, 1000);
 
 
-pauseExitPlay.classList.add('hiddening');
+modePlayPauseBtn.classList.add('invsbLink');
+
+modePlayCloseBtn.classList.add('invsbLink');
+
+
+ 
 
 
 pannel.classList.add('slideUp');
@@ -2083,6 +2281,41 @@ pannel.classList.add('slideUp');
 [...document.getElementsByClassName('showedPersonsList')].forEach(d=>d.removeEventListener('touchstart', showPauseInPlayMode));
 
 }
+
+
+
+
+
+// ---- показываем инфу о синодике ------------
+
+
+function showInfo () {
+
+  this.classList.toggle('pauseMode');
+
+document.querySelectorAll(".modalWindow")[0].classList.toggle("modalOut");
+
+
+  oZdraviiClicked ? getInfo('о здравии') : getInfo('о упокоении');
+
+}
+
+
+
+// --- функция заполнения модального окна ----------------
+
+
+   function getInfo(type) {
+
+     document.querySelectorAll(".modalWindow .holder")[0].innerHTML = `
+
+      <p>тип синодика: <strong>${type}</strong></p></br>
+
+      <p>количество записей: <strong>${loadedArr.filter(p=>p.live===type).length}</strong></p>
+
+     `;
+
+   }
 
 
 
@@ -2193,8 +2426,6 @@ allListTag.addEventListener('click', closingMenuAndAddingField);
 changeListTag.addEventListener('click', closingMenuAndGoSearch);
 
 
-startListTag.addEventListener('click', closingMenuAndStartPray);
-
 
 [...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('focus', pushLabelUp), {once: true});
 
@@ -2263,8 +2494,20 @@ playIcon.addEventListener('click', playMode);
 
 
 
-//editIcon.addEventListener('click', scrollToTop);
+infoIcon.addEventListener('click', showInfo);
 
+
+document.getElementsByClassName('cross')[0].addEventListener('click', ()=>{
+
+   infoIcon.classList.remove('pauseMode');
+
+
+document.getElementsByClassName("modalWindow")[0].classList.add("modalOut");
+
+});
+
+
+document.getElementsByClassName('loader')[0].addEventListener('touchstart', e=>e.preventDefault());
 
 
 /* ========================
@@ -2436,3 +2679,4 @@ document.getElementsByClassName('loader')[0].style.display = 'none';
 
 
 //  +++КОНЕЦ И БОГУ СЛАВА!+++ //
+
