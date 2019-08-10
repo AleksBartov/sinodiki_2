@@ -25,10 +25,40 @@
   <link rel="stylesheet" href="style.css" />
 
 </head>
-
+  
 <body>
 
 
+
+  <div id='calHolder' class='hiddening'>
+  
+      <div id='centerPointer'><strong>></strong></div>
+  
+      <div id='crossCalendar'><strong>+</strong></div>
+  
+      <div id='screen'>
+  
+        <span id='day_screen'>6</span>
+  
+        <span id='month_screen'>декабрь</span>
+  
+        <span id='year_screen'>2007</span>
+  
+      </div>
+  
+      <div class='circle years yearsOut'></div>
+  
+      <div class='circle months monthsOut'></div>
+  
+      <div class='circle days daysOut'></div>
+  
+      <div class='circle btnOK'><span class='btnInCircle'><strong>ВЫБРАТЬ</strong></span></div>
+  
+    </div>
+  
+  
+  
+  
   <div class='modalWindow modalOut'>
   
     <div class='cross'>+</div>
@@ -570,7 +600,7 @@
   
         <label class='fieldHolderLabel' for='dateOfBirth'>Дата рождения:</label>
   
-        <input disabled class="newCreatedData datePicker" name='dateOfBirth' placeholder='День рождения'/>
+        <input disabled readonly class="newCreatedData id='dateOfBirthInput' datePicker" name='dateOfBirth' placeholder='День рождения'/>
   
       </div>
   
@@ -582,7 +612,7 @@
   
         <label class='fieldHolderLabel' for='dateOfBapt'>Дата крещения:</label>
   
-        <input disabled class="newCreatedData datePicker" name='dateOfBapt' placeholder='День крещения'/>
+        <input disabled readonly class="newCreatedData datePicker" name='dateOfBapt' id='dateOfBaptInput' placeholder='День крещения'/>
   
       </div>
   
@@ -598,7 +628,7 @@
   
         <label class='fieldHolderLabel' for='dateOfSaint'>Именины:</label>
   
-        <input disabled class="newCreatedData saintDatePicker" name='dateOfSaint' placeholder='Именины'/>
+        <input disabled readonly class="newCreatedData datePicker" name='dateOfSaint' id='dateOfSaintInput' placeholder='Именины'/>
   
       </div>
   
@@ -610,7 +640,7 @@
   
         <label class='fieldHolderLabel' for='dateDeath'>Дата смерти:</label>
   
-        <input class="newCreatedData datePicker" name='dateDeath' disabled placeholder='День смерти'/>
+        <input readonly class="newCreatedData datePicker" name='dateDeath' id='dateOfDeathInput' disabled placeholder='День смерти'/>
   
       </div>
   
@@ -626,7 +656,7 @@
   
         <label class='fieldHolderLabel' for='dateOfVows'>Дата пострига:</label>
   
-        <input disabled class="newCreatedData datePicker" name='dateOfVows' placeholder='День пострига'/>
+        <input disabled readonly class="newCreatedData datePicker" name='dateOfVows' id='dateOfVowsInput' placeholder='День пострига'/>
   
       </div>
   
@@ -638,7 +668,7 @@
   
         <label class='fieldHolderLabel' for='dateOfOrdinationDiak'>Диаконская хиротония:</label>
   
-        <input class="newCreatedData forMenOnly datePicker" disabled name='dateOfOrdinationDiak' placeholder='Диак. хиротония'/>
+        <input class="newCreatedData forMenOnly datePicker" disabled readonly name='dateOfOrdinationDiak' id='dateOfOrdinationDiakInput' placeholder='Диак. хиротония'/>
   
       </div>
   
@@ -654,7 +684,7 @@
   
         <label class='fieldHolderLabel' for='dateOfOrdinationPriest'>Иерейская хиротония:</label>
   
-        <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationPriest' placeholder='Иер. хиротония'/>
+        <input disabled readonly class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationPriest' id='dateOfOrdinationPriestInput' placeholder='Иер. хиротония'/>
   
       </div>
   
@@ -670,7 +700,7 @@
   
         <label class='fieldHolderLabel' for='dateOfOrdinationBish'>Епископская хиротония:</label>
   
-        <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationBish' placeholder='Еписк. хиротония'/>
+        <input disabled readonly class="newCreatedData forMenOnly datePicker" name='dateOfOrdinationBish' id='dateOfOrdinationBishInput' placeholder='Еписк. хиротония'/>
   
       </div>
   
@@ -686,7 +716,7 @@
   
         <label class='fieldHolderLabel' for='dateOfEnthron'>Интронизация:</label>
   
-        <input disabled class="newCreatedData forMenOnly datePicker" name='dateOfEnthron' placeholder='День интронизации'/>
+        <input disabled readonly class="newCreatedData forMenOnly datePicker" name='dateOfEnthron'  id='dateOfEnthronInput' placeholder='День интронизации'/>
   
       </div>
   
@@ -814,4 +844,4 @@
   
   </html>
   
-  
+    

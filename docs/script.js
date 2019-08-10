@@ -2477,22 +2477,36 @@ allRadio.forEach(radio=>radio.addEventListener('change', setSelects));
 // назначаем слушателей дейтпикерам
 
 
-[...document.querySelectorAll(".datePicker")].forEach(input=>{
+let thatIndex;
 
-input.addEventListener('keydown', dashInsertAuto);
 
-input.addEventListener('blur', validateDate);
+[...document.querySelectorAll(".datePicker")].forEach((input, i)=>{
+
+input.addEventListener('click', (e)=>{
+
+  e.preventDefault();
+
+  thatIndex = i;
+
+
+calHolder.classList.remove('hiddening');
+
+
+setTimeout(()=>{
+
+years.classList.remove('yearsOut');
+
+months.classList.remove('monthsOut');
+
+days.classList.remove('daysOut');
+
+}, 0);
+
+
+}, false);
 
 });
 
-
-[...document.querySelectorAll('.saintDatePicker')].forEach(input=>{
-
-input.addEventListener('keydown', dashInsertAuto);
-
-input.addEventListener('blur', validateDateforSaintDay);
-
-});
 
 
 oZdravii.addEventListener('touchstart', oZdrStrtHandler, false);
@@ -2711,6 +2725,565 @@ document.getElementsByClassName('loader')[0].style.display = 'none';
 
 .catch(e=>console.log(e));
 
+
+
+/*
+
+------------------------------
+
+ попытаемся вставить календарь
+
+ ----------------------------
+
+*/
+
+
+
+const yearsArr = [];
+
+const monthsArr = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+
+const daysArr = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+
+
+const mainDiv = document.getElementById('calHolder');
+
+
+const years = document.getElementsByClassName('years')[0];
+
+const months = document.getElementsByClassName('months')[0];
+
+const days = document.getElementsByClassName('days')[0];
+
+
+
+let counterForYears = -2700;
+
+let counterForMonths = 0;
+
+let counterForDays = -600;
+
+let yearsStep = 25;
+
+let monthsStep = 30;
+
+let daysStep = 30;
+
+let strtx; let wlk;
+
+let walkForYears = 0;
+
+let walkForMonths = 0;
+
+let walkForDays = 0;
+
+
+for(let i = 1900; i < 2021; i++){
+
+  yearsArr.push(i);
+
+}
+
+
+
+document.getElementsByClassName('btnOK')[0].addEventListener('click', ()=>{
+
+  setTimeout(getDate, 0);
+
+});
+
+
+function getDate(){
+
+
+  [...document.querySelectorAll(".datePicker")].forEach((input, i)=>{
+
+
+  let month; let day;
+
+
+
+if(day_screen.innerHTML==1){
+
+      day='01';
+
+    }else if(day_screen.innerHTML==2){
+
+      day='02';
+
+    }else if(day_screen.innerHTML==3){
+
+      day='03';
+
+    }else if(day_screen.innerHTML==4){
+
+      day='04';
+
+    }else if(day_screen.innerHTML==5){
+
+      day='05';
+
+    }else if(day_screen.innerHTML==6){
+
+      day='06';
+
+    }else if(day_screen.innerHTML==7){
+
+      day='07';
+
+    }else if(day_screen.innerHTML==8){
+
+      day='08';
+
+    }else if(day_screen.innerHTML==9){
+
+      day='09';
+
+    }else{day = day_screen.innerHTML}
+
+
+  if(month_screen.innerHTML=='январь'){
+
+      month='01';
+
+    }else if(month_screen.innerHTML=='февраль'){
+
+      month='02';
+
+    }else if(month_screen.innerHTML=='март'){
+
+      month='03';
+
+    }else if(month_screen.innerHTML=='апрель'){
+
+      month='04';
+
+    }else if(month_screen.innerHTML=='май'){
+
+      month='05';
+
+    }else if(month_screen.innerHTML=='июнь'){
+
+      month='06';
+
+    }else if(month_screen.innerHTML=='июль'){
+
+      month='07';
+
+    }else if(month_screen.innerHTML=='август'){
+
+      month='08';
+
+    }else if(month_screen.innerHTML=='сентябрь'){
+
+      month='09';
+
+    }else if(month_screen.innerHTML=='октябрь'){
+
+      month='10';
+
+    }else if(month_screen.innerHTML=='ноябрь'){
+
+      month='11';
+
+    }else{
+
+      month='12';
+
+    }
+
+
+  if(thatIndex === i) input.value = `${day}.${month}.${year_screen.innerHTML}`;
+
+
+});
+
+
+mainDiv.classList.add('hiddening');
+
+}
+
+
+
+crossCalendar.addEventListener('click', ()=>{
+
+  mainDiv.classList.add('hiddening');
+
+});
+
+
+
+years.addEventListener('touchstart', yearsStart, false);
+
+months.addEventListener('touchstart', monthsStart, false);
+
+days.addEventListener('touchstart', daysStart, false);
+
+
+years.addEventListener('touchmove', yearsMove, false);
+
+months.addEventListener('touchmove', monthsMove, false);
+
+days.addEventListener('touchmove', daysMove, false);
+
+
+years.addEventListener('touchend', yearsEnd, false);
+
+months.addEventListener('touchend', monthsEnd, false);
+
+days.addEventListener('touchend', daysEnd, false);
+
+
+function yearsStart(e){
+
+  e.preventDefault();
+
+  strtx = e.pageX - mainDiv.offsetLeft;
+
+}
+
+
+function yearsMove(e){
+
+  e.preventDefault();
+
+  const x = e.pageX - mainDiv.offsetLeft;
+
+  wlk = (x - strtx)/40;
+
+  walkForYears+=wlk;
+
+  years.style.transform = `translate(-50%, -50%) rotate(${walkForYears}deg)`;
+
+  
+
+
+}
+
+
+function yearsEnd(e){
+
+  e.preventDefault();
+
+  setTimeout(centeredYearSpanFinder, 200);
+
+  checkPositionYear();
+
+  let endPosition = walkForYears -(walkForYears%yearsStep);
+
+ 
+
+  walkForYears = endPosition;
+
+
+years.style.transform = `translate(-50%, -50%) rotate(${walkForYears}deg)`;
+
+
+}
+
+
+
+
+function monthsStart(e){
+
+  e.preventDefault();
+
+  strtx = e.pageX - mainDiv.offsetLeft;
+
+}
+
+
+function monthsMove(e){
+
+  e.preventDefault();
+
+  const x = e.pageX - mainDiv.offsetLeft;
+
+  wlk = (x - strtx)/50;
+
+  walkForMonths+=wlk;
+
+  months.style.transform = `translate(-50%, -50%) rotate(${walkForMonths}deg)`;
+
+}
+
+
+function monthsEnd(e){
+
+  e.preventDefault();
+
+  setTimeout(centeredMonthSpanFinder, 200);
+
+  let endPosition = walkForMonths -(walkForMonths%monthsStep);
+
+ 
+
+  walkForMonths = endPosition;
+
+
+months.style.transform = `translate(-50%, -50%) rotate(${walkForMonths}deg)`;
+
+}
+
+
+
+
+
+function daysStart(e){
+
+  e.preventDefault();
+
+  strtx = e.pageX - mainDiv.offsetLeft;
+
+}
+
+
+function daysMove(e){
+
+  e.preventDefault();
+
+  const x = e.pageX - mainDiv.offsetLeft;
+
+  wlk = (x - strtx)/25;
+
+  walkForDays+=wlk;
+
+  days.style.transform = `translate(-50%, -50%) rotate(${walkForDays}deg)`;
+
+}
+
+
+function daysEnd(e){
+
+  e.preventDefault();
+
+  setTimeout(centeredDaySpanFinder, 200);
+
+  checkPositionDay();
+
+  let endPosition = walkForDays -(walkForDays%daysStep);
+
+ 
+
+  walkForDays = endPosition;
+
+
+days.style.transform = `translate(-50%, -50%) rotate(${walkForDays}deg)`;
+
+}
+
+
+
+
+
+
+years.innerHTML = yearsArr.map(y=>{
+
+  counterForYears+=yearsStep;
+
+  return `
+
+    <span class='yearInCircle opacityToZero' style='transform: translateX(-50%) rotate(${counterForYears}deg)'>${y}</span>
+
+  `;
+
+}).join('');
+
+
+
+months.innerHTML = monthsArr.map(m=>{
+
+  counterForMonths+=monthsStep;
+
+  return `
+
+    <span class='monthInCircle' style='transform: translateX(-50%) rotate(${counterForMonths}deg)'>${m}</span>
+
+  `;
+
+}).join('');
+
+
+
+days.innerHTML = daysArr.map(d=>{
+
+  counterForDays+=daysStep;
+
+  return `
+
+    <span class='dayInCircle opacityToZero' style='transform: translateX(-50%) rotate(${counterForDays}deg)'>${d}</span>
+
+  `;
+
+}).join('');
+
+
+
+const yearSpanArr = [...document.querySelectorAll('.yearInCircle')];
+
+
+const monthSpanArr = [...document.querySelectorAll('.monthInCircle')];
+
+
+const daySpanArr = [...document.querySelectorAll('.dayInCircle')];
+
+
+
+let sliceYearsStart = 100;
+
+let sliceYearsEnd = 114;
+
+
+startYearsPosition();
+
+
+function startYearsPosition() {
+
+  yearSpanArr
+
+  .slice(sliceYearsStart, sliceYearsEnd)
+
+  .forEach(s=>s.classList.remove('opacityToZero'));
+
+}
+
+
+
+let sliceDaysStart = 5;
+
+let sliceDaysEnd = 17;
+
+
+startDaysPosition();
+
+
+function startDaysPosition() {
+
+  daySpanArr
+
+  .slice(sliceDaysStart, sliceDaysEnd)
+
+  .forEach(s=>s.classList.remove('opacityToZero'));
+
+}
+
+
+
+function checkPositionYear() {
+
+ 
+
+  yearSpanArr
+
+  .forEach(s=>s.classList.add('opacityToZero'));
+
+  
+
+  if(wlk < 0){
+
+    sliceYearsStart+=2;
+
+    sliceYearsEnd+=2;
+
+  }else{
+
+    sliceYearsStart-=2;
+
+    sliceYearsEnd-=2;
+
+  }
+
+
+  setTimeout(()=>{
+
+    yearSpanArr
+
+  .slice(sliceYearsStart, sliceYearsEnd)
+
+  .forEach(s=>s.classList.remove('opacityToZero'));
+
+  },0);
+
+}
+
+
+
+function checkPositionDay() {
+
+ 
+
+  daySpanArr
+
+  .forEach(s=>s.classList.add('opacityToZero'));
+
+  
+
+  if(wlk < 0){
+
+    sliceDaysStart+=2;
+
+    sliceDaysEnd+=2;
+
+  }else{
+
+    sliceDaysStart-=2;
+
+    sliceDaysEnd-=2;
+
+  }
+
+
+  setTimeout(()=>{
+
+    daySpanArr
+
+  .slice(sliceDaysStart, sliceDaysEnd)
+
+  .forEach(s=>s.classList.remove('opacityToZero'));
+
+  },0);
+
+}
+
+
+
+
+
+function centeredYearSpanFinder(){
+
+  year_screen.innerHTML = yearSpanArr.filter(s=>!s.classList.contains('opacityToZero')).filter(s=>s.getBoundingClientRect().top>177&&s.getBoundingClientRect().top<182).map(s=>s.innerHTML);
+
+}
+
+
+
+function centeredMonthSpanFinder(){
+
+  
+
+month_screen.innerHTML = monthSpanArr.filter(s=>s.getBoundingClientRect().top>250&&s.getBoundingClientRect().top<256).map(s=>s.innerHTML);
+
+
+ //console.log(monthSpanArr.map(s=>s.getBoundingClientRect().top));
+
+}
+
+
+
+function centeredDaySpanFinder(){
+
+  
+
+day_screen.innerHTML = daySpanArr.filter(s=>s.getBoundingClientRect().top>328&&s.getBoundingClientRect().top<331&&!s.classList.contains('opacityToZero')).map(s=>s.innerHTML);
+
+
+ //console.log(daySpanArr.map(s=>s.getBoundingClientRect().top));
+
+}
+
+
+
+//setTimeout(displayYear(), 0);
 
 
 
