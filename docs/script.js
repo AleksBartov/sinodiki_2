@@ -16,14 +16,22 @@
 6) вставить в форму поле "родство/связь"
 
 
-7) решить в полях с датами формат ввода
-
-
 8) скорость поминовения
 
 
 9) гаснет экран при режиме поминовения
 
+
+10) шишкин сугубая
+
+
+11) после ввода инпута лейблы
+
+
+12) формат кипера для именин без года
+
+
+13) верификация имени и тп. не должно быть пробелов
 
 */
 
@@ -64,6 +72,20 @@ let speed = 19;  /* чем меньше число, тем выше скорос
 
 
 const endings = [
+
+  ['иил', 'иила'],
+
+  ['ест', 'еста'],
+
+  ['лья', 'льи'],
+
+  ['рон', 'рона'],
+
+  ['ера', 'еры'],
+
+  ['рей', 'рея'],
+
+  ['сим', 'сима'],
 
   ['рья', 'рьи'],
 
@@ -846,6 +868,16 @@ searchResults.innerHTML = html;
 }
 
 
+// функция сохранения измененных данных ---------------------  ----------------------------  ----------------------------
+
+
+function saveChangedItem() {
+
+  alert('измененные данные успешно слхранены');
+
+}
+
+
 
 // кнопка закрыть формы редактирования --------
 
@@ -915,6 +947,11 @@ this.innerHTML = loadedArr
    return `
 
 <button id='closeSearchedItem' onclick='closeItemSearched()'>закрыть</button>
+
+
+<button id='saveChanges' onclick='saveChangedItem()'>сохранить
+
+изменения</button>
 
 <section class='foundPersonData'>
 
@@ -2743,7 +2780,7 @@ const yearsArr = [];
 
 const monthsArr = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
 
-const daysArr = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+const daysArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
 
 const mainDiv = document.getElementById('calHolder');
@@ -2757,11 +2794,13 @@ const days = document.getElementsByClassName('days')[0];
 
 
 
+
+
 let counterForYears = -2700;
 
 let counterForMonths = 0;
 
-let counterForDays = -600;
+let counterForDays = -3000;
 
 let yearsStep = 25;
 
@@ -2778,6 +2817,7 @@ let walkForMonths = 0;
 let walkForDays = 0;
 
 
+
 for(let i = 1900; i < 2021; i++){
 
   yearsArr.push(i);
@@ -2789,6 +2829,16 @@ for(let i = 1900; i < 2021; i++){
 document.getElementsByClassName('btnOK')[0].addEventListener('click', ()=>{
 
   setTimeout(getDate, 0);
+
+  setTimeout(()=>{
+
+years.classList.add('yearsOut');
+
+months.classList.add('monthsOut');
+
+days.classList.add('daysOut');
+
+}, 0);
 
 });
 
@@ -2901,6 +2951,7 @@ if(day_screen.innerHTML==1){
 
 mainDiv.classList.add('hiddening');
 
+
 }
 
 
@@ -2909,7 +2960,19 @@ crossCalendar.addEventListener('click', ()=>{
 
   mainDiv.classList.add('hiddening');
 
+
+setTimeout(()=>{
+
+years.classList.add('yearsOut');
+
+months.classList.add('monthsOut');
+
+days.classList.add('daysOut');
+
+}, 0);
+
 });
+
 
 
 
@@ -2947,6 +3010,8 @@ function yearsMove(e){
 
   e.preventDefault();
 
+  
+
   const x = e.pageX - mainDiv.offsetLeft;
 
   wlk = (x - strtx)/40;
@@ -2965,16 +3030,13 @@ function yearsEnd(e){
 
   e.preventDefault();
 
-  setTimeout(centeredYearSpanFinder, 200);
-
-  checkPositionYear();
+setTimeout(centeredYearSpanFinder, 200);
 
   let endPosition = walkForYears -(walkForYears%yearsStep);
 
- 
-
   walkForYears = endPosition;
 
+  setTimeout(checkPositionYear, 0);
 
 years.style.transform = `translate(-50%, -50%) rotate(${walkForYears}deg)`;
 
@@ -3059,13 +3121,13 @@ function daysEnd(e){
 
   setTimeout(centeredDaySpanFinder, 200);
 
-  checkPositionDay();
-
   let endPosition = walkForDays -(walkForDays%daysStep);
 
  
 
   walkForDays = endPosition;
+
+  setTimeout(checkPositionDay, 0);
 
 
 days.style.transform = `translate(-50%, -50%) rotate(${walkForDays}deg)`;
@@ -3131,7 +3193,7 @@ const daySpanArr = [...document.querySelectorAll('.dayInCircle')];
 
 let sliceYearsStart = 100;
 
-let sliceYearsEnd = 114;
+let sliceYearsEnd = 115;
 
 
 startYearsPosition();
@@ -3149,9 +3211,9 @@ function startYearsPosition() {
 
 
 
-let sliceDaysStart = 5;
+let sliceDaysStart = 93;
 
-let sliceDaysEnd = 17;
+let sliceDaysEnd = 105;
 
 
 startDaysPosition();
@@ -3179,19 +3241,12 @@ function checkPositionYear() {
 
   
 
-  if(wlk < 0){
+sliceYearsStart-=(walkForYears/yearsStep);
 
-    sliceYearsStart+=2;
+   sliceYearsEnd-=(walkForYears/yearsStep);
 
-    sliceYearsEnd+=2;
 
-  }else{
-
-    sliceYearsStart-=2;
-
-    sliceYearsEnd-=2;
-
-  }
+  //alert(sliceYearsStart);
 
 
   setTimeout(()=>{
@@ -3201,6 +3256,11 @@ function checkPositionYear() {
   .slice(sliceYearsStart, sliceYearsEnd)
 
   .forEach(s=>s.classList.remove('opacityToZero'));
+
+
+  sliceYearsStart = 100;
+
+  sliceYearsEnd = 115;
 
   },0);
 
@@ -3218,19 +3278,9 @@ function checkPositionDay() {
 
   
 
-  if(wlk < 0){
+    sliceDaysStart-=(walkForDays/daysStep);
 
-    sliceDaysStart+=2;
-
-    sliceDaysEnd+=2;
-
-  }else{
-
-    sliceDaysStart-=2;
-
-    sliceDaysEnd-=2;
-
-  }
+    sliceDaysEnd-=(walkForDays/daysStep);
 
 
   setTimeout(()=>{
@@ -3240,6 +3290,11 @@ function checkPositionDay() {
   .slice(sliceDaysStart, sliceDaysEnd)
 
   .forEach(s=>s.classList.remove('opacityToZero'));
+
+
+  sliceDaysStart = 93;
+
+  sliceDaysEnd = 105;
 
   },0);
 
@@ -3251,7 +3306,11 @@ function checkPositionDay() {
 
 function centeredYearSpanFinder(){
 
-  year_screen.innerHTML = yearSpanArr.filter(s=>!s.classList.contains('opacityToZero')).filter(s=>s.getBoundingClientRect().top>177&&s.getBoundingClientRect().top<182).map(s=>s.innerHTML);
+  year_screen.innerHTML = yearSpanArr.filter(s=>{
+
+  return s.getBoundingClientRect().left > ((screen.width/2)-(s.getBoundingClientRect().width/2))-20 && s.getBoundingClientRect().left < ((screen.width/2)-(s.getBoundingClientRect().width/2))+20 && !s.classList.contains('opacityToZero') && (s.getBoundingClientRect().bottom < screen.height)
+
+}).map(s=>s.innerHTML);
 
 }
 
@@ -3261,10 +3320,12 @@ function centeredMonthSpanFinder(){
 
   
 
-month_screen.innerHTML = monthSpanArr.filter(s=>s.getBoundingClientRect().top>250&&s.getBoundingClientRect().top<256).map(s=>s.innerHTML);
+month_screen.innerHTML = monthSpanArr.filter(s=>{
 
+  return s.getBoundingClientRect().left > ((screen.width/2)-(s.getBoundingClientRect().width/2))-10 && s.getBoundingClientRect().left < ((screen.width/2)-(s.getBoundingClientRect().width/2))+10 && (s.getBoundingClientRect().bottom < screen.height)
 
- //console.log(monthSpanArr.map(s=>s.getBoundingClientRect().top));
+}).map(s=>s.innerHTML);
+
 
 }
 
@@ -3272,21 +3333,15 @@ month_screen.innerHTML = monthSpanArr.filter(s=>s.getBoundingClientRect().top>25
 
 function centeredDaySpanFinder(){
 
-  
 
-day_screen.innerHTML = daySpanArr.filter(s=>s.getBoundingClientRect().top>328&&s.getBoundingClientRect().top<331&&!s.classList.contains('opacityToZero')).map(s=>s.innerHTML);
+  day_screen.innerHTML = daySpanArr.filter(s=>{
 
+  return s.getBoundingClientRect().left > ((screen.width/2)-(s.getBoundingClientRect().width/2))-10 && s.getBoundingClientRect().left < ((screen.width/2)-(s.getBoundingClientRect().width/2))+10 && !s.classList.contains('opacityToZero') && (s.getBoundingClientRect().bottom < screen.height)
 
- //console.log(daySpanArr.map(s=>s.getBoundingClientRect().top));
+}).map(s=>s.innerHTML);
+
 
 }
-
-
-
-//setTimeout(displayYear(), 0);
-
-
-
 
 
 //  +++КОНЕЦ И БОГУ СЛАВА!+++ //
