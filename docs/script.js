@@ -31,7 +31,15 @@
 12) формат кипера для именин без года
 
 
+14) возможность стереть запись с кипера
+
+
 13) верификация имени и тп. не должно быть пробелов
+
+
+14) подумать над создаеием групп. при поминовении будет яснее кто есть кто
+
+
 
 */
 
@@ -655,7 +663,9 @@ newCreatedData
 
   
 
-  allLabels.forEach(data=>{
+  /*
+
+allLabels.forEach(data=>{
 
 data.style.transform = 'translate(6%, 112%)';
 
@@ -663,8 +673,7 @@ data.style.fontSize = '1.4rem';
 
 });
 
-
-   
+  */
 
 }
 
@@ -794,6 +803,8 @@ data.style.transform = 'translate(6%, 50%)';
 
 data.style.fontSize = '.85rem';
 
+data.style.opacity = 1;
+
 });
 
 }
@@ -917,7 +928,32 @@ setTimeout(()=>{
 
 },0);
 
+}
 
+
+
+//кнопка отмены редактирования
+
+
+  function exitEditModeWithoutSave(){
+
+ searchingForChange.classList.remove('hiddening');
+
+formHolder.style.opacity = 0;
+
+formHolder.classList.add('hiddening');
+
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
+
+
+addForm.reset();
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание новой записи</h3>
+
+    <h5>( прежде всего выбирите тип синодика и пол )</h5>`;
 
 
 }
@@ -935,6 +971,43 @@ function showEditform() {
 
 
 window.scrollTo({top: 0, behavior: 'smooth'});
+
+
+// пробую заполнить имеющийся шаблон
+
+searchingForChange.classList.add('hiddening');
+
+formHolder.style.opacity = 1;
+
+formHolder.classList.remove('hiddening');
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
+
+        .filter(p=>p.count==this.id).map(p=>{
+
+   countSearched = p.count;
+
+   return `
+
+    <div id='editCancel'>отменить редактирование</div>
+
+    <h3>${p.other} ${p.name} ${p.surname}</h3>
+
+    <h5>( режим редактирования )</h5>
+
+`});
+
+
+setTimeout(()=>{
+
+  editCancel.addEventListener('click', exitEditModeWithoutSave);
+
+}, 0);
+
+
+
+/*
 
   this.classList.add('formToEdit');
 
@@ -1032,7 +1105,7 @@ this.innerHTML = loadedArr
 
 `
 
-});
+}); */
 
 
 /*
@@ -1049,13 +1122,12 @@ this.innerHTML = loadedArr
 
     dateOfEnthron,
 
-    comment,
-
     other,
 
 */
 
 
+/*
 
 
 setTimeout(()=>{
@@ -1071,6 +1143,9 @@ setTimeout(()=>{
 }, 0);
 
 
+*/
+
+
 }
 
 
@@ -1082,6 +1157,17 @@ setTimeout(()=>{
 
 
 function openingMenu() {
+
+
+  addForm.reset();
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание новой записи</h3>
+
+    <h5>( прежде всего выбирите тип синодика и пол )</h5>`;
 
 
   pannelToClose();
@@ -2238,7 +2324,7 @@ function getCenterOfPage() {
 
 div.style.opacity = 0; 
 
- } else if((div.offsetTop-window.scrollY) > (screen.height/2.5)){
+ } else if((div.offsetTop-window.scrollY) > (screen.height/2)){
 
 div.style.opacity = 0; 
 
@@ -2260,6 +2346,9 @@ div.style.opacity = 0;
 function closePlayMode() {
 
    playModeStart = false;
+
+
+  modePlayPauseBtn.innerHTML = 'пауза';
 
 
    window.scrollTo({top: 0, behavior: 'smooth'});
@@ -2502,10 +2591,10 @@ changeListTag.addEventListener('click', closingMenuAndGoSearch);
 
 
 
-[...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('focus', pushLabelUp), {once: true});
+[...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('keyup', pushLabelUp, {once: true}));
 
 
-[...formInputs].forEach(input=>input.addEventListener('focus', pushLabelUp), {once: true});
+[...formInputs].forEach(input=>input.addEventListener('keyup', pushLabelUp, {once: true}));
 
 
 allRadio.forEach(radio=>radio.addEventListener('change', setSelects));

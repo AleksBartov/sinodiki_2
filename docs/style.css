@@ -1,3 +1,14 @@
+:root {
+
+  --mainBg: #333e4e;
+
+  --mainRed: #CB3C25;
+
+}
+
+
+
+
 * {
 
   margin: 0;
@@ -13,7 +24,7 @@
 
 html {
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   color: #ffffff;
 
@@ -91,7 +102,7 @@ html {
 
 #centerPointer {
 
-  background: #CB3C25;
+  background: var(--mainRed);
 
   position: fixed;
 
@@ -575,6 +586,7 @@ html {
 }
 
 
+
 .fromToFonStep1 {
 
   transform: translateY(0%);
@@ -965,19 +977,21 @@ header {
 
   display: none;
 
+  opacity: 0;
+
   background: transparent;
 
-  padding: 0 5px;
+  //padding: 0 5px;
 
   float: left;
 
-  color: #b6c4d7;
+  color: white;
 
-  transform: translate(6%, 112%);
+  //transform: translate(6%, 112%);
 
-  font-size: .8rem;
+  font-size: .6rem;
 
-  margin-top: -21px;
+  //margin-top: -21px;
 
   transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -1272,12 +1286,6 @@ header {
 
   padding-right: 10px;
 
-  //height: 100%;
-
-  //width: 100%;
-
-  //float: right;
-
 }
 
 
@@ -1354,11 +1362,6 @@ header {
 
 .allItems {
 
-  //position: relative;
-
-  //height: 100%;
-
- // overflow-x: hidden;
 
 }
 
@@ -1548,6 +1551,42 @@ svg {
 }
 
 
+#editCancel {
+
+  position: relative;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  margin: 0 5px 20px 0;
+
+  padding: 5px 20px;
+
+  width: 40%;
+
+  font-size: .7rem;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  outline: none;
+
+  color: #ffffff;
+
+  background-color: transparent;
+
+  border: 1px solid #BDC6BC;
+
+  border-radius: 3px;
+
+} 
+
+
+
 .scrollDown1 {
 
   animation: line-width cubic-bezier(0.445, 0.05, 0.55, 0.95) forwards .3s, line-gone .7s cubic-bezier(0.445, 0.05, 0.55, 0.95) forwards .1s;
@@ -1734,7 +1773,7 @@ td {
 
 .fontSizePlus {
 
-  font-size: 1.7rem;
+  font-size: 1.9rem;
 
   font-weight: 600;
 
@@ -1837,6 +1876,114 @@ td {
 
 
   }
+
+
+}
+
+
+@media screen and (orientation: landscape) {
+
+  .card {
+
+    width: 33%;
+
+  }
+
+
+  .years {
+
+  width: 300px;
+
+  height: 300px;
+
+}
+
+
+.months {
+
+  width: 225px;
+
+  height: 225px;
+
+}
+
+
+.days {
+
+  width: 150px;
+
+  height: 150px;
+
+}
+
+
+.btnOK {
+
+  width: 75px;
+
+  height: 75px;
+
+}
+
+
+.yearInCircle {
+
+  top: 7px;
+
+  font-size: .9rem;
+
+  transform-origin: 50% 143px;
+
+}
+
+
+.monthInCircle {
+
+  top: 7px;
+
+  font-size: .7rem;
+
+  transform-origin: 50% 105.5px;
+
+} 
+
+
+.dayInCircle {
+
+  top: 7px;
+
+  font-size: .9rem;
+
+  transform-origin: 50% 68px;
+
+} 
+
+
+
+  #screen {
+
+  top: 30.5px;
+
+  font-size: 1.4rem;
+
+}
+
+
+
+.btnInCircle {
+
+  font-size: .52rem;
+
+} 
+
+
+
+.loader > svg, .fromToFon > svg {
+
+  width: 33vw;
+
+}
+
 
 
 }
