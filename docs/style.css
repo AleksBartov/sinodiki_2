@@ -30,6 +30,8 @@ html {
 
   font-family: AvenirNext-UltraLight;
 
+  //font-family: San-Francisko;
+
   overflow: hidden;
 
   height: 100%;
@@ -1561,11 +1563,11 @@ svg {
 
   margin: 0 5px 20px 0;
 
-  padding: 5px 20px;
+  padding: 13.5px 20px;
 
-  width: 40%;
+  width: 70%;
 
-  font-size: .7rem;
+  font-size: 1rem;
 
   cursor: pointer;
 
@@ -1575,11 +1577,11 @@ svg {
 
   outline: none;
 
-  color: #ffffff;
+  color: var(--mainBg);
 
-  background-color: transparent;
+  background-color: #BDC6BC;
 
-  border: 1px solid #BDC6BC;
+  border: 1px solid #ffffff;
 
   border-radius: 3px;
 
@@ -1981,6 +1983,21 @@ td {
 .loader > svg, .fromToFon > svg {
 
   width: 33vw;
+
+}
+
+
+
+.fontSizePlus {
+
+  font-size: 2.9rem;
+
+}
+
+
+.commonBox_other {
+
+  font-size: 1.37rem;
 
 }
 

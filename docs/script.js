@@ -72,7 +72,7 @@
 
 
 
-const myKey = 'apiKey=2p8S-XYXJGzaPbRYMNWXb24YTrqsbZdV';
+const myKey = 'apiKey=sKw_oqVSmdk0cj8XolfkSyap__JKRPLt';
 
 
 let speed = 19;  /* чем меньше число, тем выше скорость */
@@ -183,6 +183,8 @@ let last_known_scroll_position = 0;
 
 let countSearched;
 
+let IDtoEdit;
+
 let ticking = false, playModeStart = false;
 
 
@@ -193,6 +195,12 @@ let bckgrnd;
 
 
 let deepestPoint, lastCounterState;
+
+
+let editMode = false;
+
+
+const allFormFields = [...document.querySelectorAll('.thisIsWhatToSave')];
 
 
 
@@ -512,7 +520,7 @@ function invalidData(msg, el) {
 
 
 
-function setDataTest() {
+function setDataTest() { 
 
 
   myAlert('данные сохраняются');
@@ -544,6 +552,128 @@ const data = [...radios, ...texts, ...selects];
 
 
  const [live, sex, name, surname, fathername, dateOfBirth, dateOfBapt, dateOfSaint, dateDeath, dateOfVows, dateOfOrdinationDiak, dateOfOrdinationPriest, dateOfOrdinationBish, dateOfEnthron, ...other] = data;
+
+
+
+  // если данные редактируются
+
+
+    if(this.innerHTML === 'сохранить изменения') {
+
+  let comment = [...document.getElementsByTagName('textarea')].map(i=>i.value);
+
+  
+
+  let count = countSearched;
+
+
+  let editData = JSON.stringify({
+
+    live,
+
+    sex,
+
+    name,
+
+    surname,
+
+    fathername,
+
+    dateOfBirth,
+
+    dateOfBapt,
+
+    dateOfSaint,
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+    count
+
+  });
+
+
+  const options = { 
+
+  method: 'PUT',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  },
+
+  body: editData
+
+};
+
+
+  
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov/${IDtoEdit}?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(person=>{
+
+
+document.getElementsByTagName('body')[0].scrollTop = 0;
+
+
+document.getElementsByClassName('msgDiv')[0].innerHTML = `Изменения для ${person.other}${person.name} сохранены!`;
+
+
+  setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  addForm.reset();
+
+btnAdd.classList.add('hiddening');
+
+
+forMaleLive.classList.add('hiddening');
+
+forFemaleLive.classList.add('hiddening');
+
+forMaleDeath.classList.add('hiddening');
+
+forFemaleDeath.classList.add('hiddening');
+
+
+newCreatedData
+
+  .filter(d=>d.type != 'radio')
+
+  .forEach(i=>i.disabled=true);
+
+})
+
+.catch(e=>console.log(e));
+
+
+  return;
+
+}
+
+
+  // конец варианта редактирования
+
 
 
   let addForSex, count = Date.now(), comment = [...document.getElementsByTagName('textarea')].map(i=>i.value);
@@ -595,7 +725,6 @@ const data = [...radios, ...texts, ...selects];
 
   // сохраняем данные и в мобиЛаб:
 
-
   const options = { 
 
   method: 'POST',
@@ -609,7 +738,6 @@ const data = [...radios, ...texts, ...selects];
   body: newData
 
 };
-
 
 
 fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`, options)
@@ -627,17 +755,16 @@ document.getElementsByClassName('msgDiv')[0].innerHTML = `${person.other}${perso
 
   setTimeout(()=>{
 
-    alertFon.classList.remove('showAlert');
+alertFon.classList.remove('showAlert');
 
   }, 2000);
 
-
   addForm.reset();
 
-  btnAdd.classList.add('hiddening');
+btnAdd.classList.add('hiddening');
 
 
-  forMaleLive.classList.add('hiddening');
+forMaleLive.classList.add('hiddening');
 
 forFemaleLive.classList.add('hiddening');
 
@@ -652,8 +779,6 @@ newCreatedData
 
   .forEach(i=>i.disabled=true);
 
-
-
 })
 
 .catch(e=>console.log(e));
@@ -662,18 +787,6 @@ newCreatedData
   // конец работы с мобиЛаб
 
   
-
-  /*
-
-allLabels.forEach(data=>{
-
-data.style.transform = 'translate(6%, 112%)';
-
-data.style.fontSize = '1.4rem';
-
-});
-
-  */
 
 }
 
@@ -937,6 +1050,16 @@ setTimeout(()=>{
 
   function exitEditModeWithoutSave(){
 
+
+  editMode = false;
+
+
+ addForm.reset();
+
+
+allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
+
+
  searchingForChange.classList.remove('hiddening');
 
 formHolder.style.opacity = 0;
@@ -948,7 +1071,34 @@ formHolder.classList.add('hiddening');
 [...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
 
 
-addForm.reset();
+btnAdd.innerHTML = 'добавить';
+
+  btnAdd.classList.add('hiddening');
+
+
+  forMaleLive.classList.add('hiddening');
+
+forFemaleLive.classList.add('hiddening');
+
+forMaleDeath.classList.add('hiddening');
+
+forFemaleDeath.classList.add('hiddening');
+
+
+newCreatedData
+
+  .filter(d=>d.type != 'radio')
+
+  .forEach(i=>i.disabled=true);
+
+
+liveChoice.checked = false;
+
+sexMChoice.checked = false;
+
+deathChoice.checked = false;
+
+sexFChoice.checked = false;
 
 
 document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание новой записи</h3>
@@ -965,6 +1115,9 @@ document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание н�
 
 
 function showEditform() {
+
+
+editMode = true;
 
 
 [...document.querySelectorAll('.searchedItem')].forEach(d=>d.removeEventListener('click', showEditform, false));
@@ -988,6 +1141,12 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
 
    countSearched = p.count;
 
+   IDtoEdit = p._id.$oid;
+
+
+   console.log(p._id.$oid);
+
+
    return `
 
     <div id='editCancel'>отменить редактирование</div>
@@ -999,116 +1158,36 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
 `});
 
 
-setTimeout(()=>{
-
-  editCancel.addEventListener('click', exitEditModeWithoutSave);
-
-}, 0);
+//--------------------------- -----------------------------
 
 
+ let person = loadedArr
 
-/*
-
-  this.classList.add('formToEdit');
-
-this.innerHTML = loadedArr
-
-        .filter(p=>p.count==this.id).map(p=>{
-
-   countSearched = p.count;
-
-   return `
-
-<button id='closeSearchedItem' onclick='closeItemSearched()'>закрыть</button>
+        .filter(p=>p.count==this.id)[0];
 
 
-<button id='saveChanges' onclick='saveChangedItem()'>сохранить
-
-изменения</button>
-
-<section class='foundPersonData'>
-
-<h3>${p.other} ${p.name} ${p.surname}</h3>
-
-</br>
-
-<span class='formItem invsbLink'>В синодик о: </span>
-
-<select class='formItem invsbLink'>
-
-    <option value='${p.live}'>${p.live=='о здравии' ? 'здравии' : 'упокоении'}</option>
-
-    <option value='${p.live=='о здравии' ? 'о упокоении' : 'о здравии'}'>${p.live=='о здравии' ? 'упокоении' : 'здравии'}</option>
-
-  </select>
-
-</br>
-
-<select class='formItem invsbLink'>
-
-    <option value='${p.other[0]}'>${p.other[0]}</option>
-
-  </select>
-
-  <select class='formItem invsbLink'>
-
-    <option value='${p.other[1]}'>${p.other[1]}</option>
-
-  </select>
-
-</br>
+ console.log(person);
 
 
-<span class='formItem invsbLink'>Имя: </span><input class='formItem invsbLink' value='${p.name}' />
+ let {
 
-</br>
+    id,
 
-<span class='formItem invsbLink'>Отчество: </span><input class='formItem invsbLink' value='${p.fathername}' />
+    live,
 
-</br>
+    sex,
 
-<span class='formItem invsbLink'>Фамилия: </span><input class='formItem invsbLink' value='${p.surname}' />
+    name,
 
-</br>
+    surname,
 
-<span class='formItem invsbLink'>Пол: </span>
+    fathername,
 
-<select class='formItem invsbLink'>
+    dateOfBirth,
 
-    <option value='${p.sex}'>${p.sex=='муж' ? 'мужской' : 'женский'}</option>
+    dateOfBapt,
 
-    <option value='${p.sex=='муж' ? 'жен' : 'муж'}'>${p.sex=='муж' ? 'женский' : 'мужской'}</option>
-
-  </select>
-
-</br>
-
-<span class='formItem invsbLink'>Дата рождения: </span><input class='formItem invsbLink' value='${p.dateOfBirth}' />
-
-</br>
-
-<span class='formItem invsbLink'>Дата крещения: </span><input class='formItem invsbLink' value='${p.dateOfBapt}' />
-
-</br>
-
-<span class='formItem invsbLink'>Именины: </span><input class='formItem invsbLink' value='${p.dateOfSaint}' />
-
-</br>
-
-<span class='formItem invsbLink'>Комментарий: </span>
-
-<textarea class='formItem invsbLink' rows="10" cols="50">${p.comment}</textarea>
-
-   </br>
-
-</section>
-
-`
-
-}); */
-
-
-/*
+    dateOfSaint,
 
     dateDeath,
 
@@ -1122,31 +1201,134 @@ this.innerHTML = loadedArr
 
     dateOfEnthron,
 
+    comment,
+
     other,
 
-*/
+    count
+
+ } = person;
 
 
-/*
+
+// установили пол и жизнь
+
+[...allRadio].forEach(r=>{
+
+  if(r.value === live) r.checked = true;
+
+  if(r.value === sex) r.checked = true;
+
+   //setSelects();
+
+});
+
+
+  setSelects();
+
+
+// установили селекты
+
+
+[...document.getElementsByTagName('select')].filter(s=>!s.parentElement.classList.contains('hiddening')).forEach(s=>{
+
+     [...s.children].filter(op=>op.value==other[0] || op.value==other[1]).forEach(o=>o.selected=true);
+
+  });
+
+
+// заполнили инпуты
+
+
+[...document.querySelectorAll("input")].forEach(i=>{
+
+    const matchName = i.name;
+
+    Object.keys(person)
+
+     .forEach(key=>{
+
+       if(key==matchName) i.value = person[key]
+
+     });
+
+});
+
+
+// комментарий textarea заполнили
+
+
+
+[...document.querySelectorAll("textarea")].forEach(t=>{
+
+    const matchName = t.name;
+
+    Object.keys(person)
+
+     .forEach(key=>{
+
+       if(key==matchName) t.value = person[key]
+
+     });
+
+});
+
+
+// ----------------------------
+
+
+
+//прячем боттон и меняем текст на ней ------------------------ -------------------------------
+
+
+btnAdd.innerHTML = 'сохранить изменения';
+
+
+// btnAdd.disabled = true;
+
+
+btnAdd.classList.add('hiddening');
+
+
+// ------- на любое изменение добовляем слушателя и тогда отображаем кнопку
 
 
 setTimeout(()=>{
 
-[...document.querySelectorAll('.formItem')].forEach((el, i)=>{
 
-    const time = `${i++}00`;
+allFormFields.forEach(el=>el.addEventListener('change', lookAtFofmChange, false));
 
-    setTimeout(()=>el.classList.remove('invsbLink'), time);
+}, 200);
 
-  });
+
+
+setTimeout(()=>{
+
+  editCancel.addEventListener('click', exitEditModeWithoutSave);
 
 }, 0);
 
 
-*/
+}
+
+
+
+
+// -- просто отобразить кнопку и удалить слушателя 
+
+
+function lookAtFofmChange(){
+
+
+//alert('ты изменил? я не слушаю');
+
+btnAdd.classList.remove('hiddening');
+
+allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
 
 
 }
+
 
 
 
@@ -1159,7 +1341,46 @@ setTimeout(()=>{
 function openingMenu() {
 
 
+  allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
+
+
+  editMode = false;
+
+
   addForm.reset();
+
+  
+
+
+btnAdd.innerHTML = 'добавить';
+
+
+btnAdd.classList.add('hiddening');
+
+
+  forMaleLive.classList.add('hiddening');
+
+forFemaleLive.classList.add('hiddening');
+
+forMaleDeath.classList.add('hiddening');
+
+forFemaleDeath.classList.add('hiddening');
+
+
+newCreatedData
+
+  .filter(d=>d.type != 'radio')
+
+  .forEach(i=>i.disabled=true);
+
+
+liveChoice.checked = false;
+
+sexMChoice.checked = false;
+
+deathChoice.checked = false;
+
+sexFChoice.checked = false;
 
 
 [...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
@@ -1987,6 +2208,22 @@ modePlayPauseBtn.classList.toggle('invsbLink');
 
 modePlayCloseBtn.classList.toggle('invsbLink');
 
+
+   // if duering of three second touch event not fires, hide buttons! --------
+
+
+   setTimeout(()=>{
+
+      if(playModeStart){
+
+      modePlayPauseBtn.classList.add('invsbLink');
+
+modePlayCloseBtn.classList.add('invsbLink'); 
+
+        }
+
+   }, 3000);
+
 }
 
 
@@ -2030,8 +2267,6 @@ function playMode () {
 
   this.classList.toggle('pauseMode');
 
-
-  //console.log(oZdravii.getBoundingClientRect());
 
 
 [...document.querySelectorAll('#playIcon path')].forEach(p=>p.classList.toggle('hiddening'));
@@ -2597,7 +2832,9 @@ changeListTag.addEventListener('click', closingMenuAndGoSearch);
 [...formInputs].forEach(input=>input.addEventListener('keyup', pushLabelUp, {once: true}));
 
 
+
 allRadio.forEach(radio=>radio.addEventListener('change', setSelects));
+
 
 
 // назначаем слушателей дейтпикерам
@@ -2609,6 +2846,26 @@ let thatIndex;
 [...document.querySelectorAll(".datePicker")].forEach((input, i)=>{
 
 input.addEventListener('click', (e)=>{
+
+
+  // less days for saintDay -------------------------------
+
+
+if(input.classList.contains('saintDay')) {
+
+years.classList.add('hiddening');
+
+year_screen.innerHTML = '';
+
+fonCenterPointer.style.bottom = '216px';
+
+centerPointer.style.bottom = '210px';
+
+   }
+
+
+// ---------------------------
+
 
   e.preventDefault();
 
@@ -2652,6 +2909,7 @@ oUpokoenii.addEventListener('touchmove', oUpokMoveHandler, false);
 
 
 oUpokoenii.addEventListener('touchend', oUpokEndHandler, false);
+
 
 
 // ---------конец слайдера -----
@@ -2917,9 +3175,12 @@ for(let i = 1900; i < 2021; i++){
 
 document.getElementsByClassName('btnOK')[0].addEventListener('click', ()=>{
 
+  if(editMode) lookAtFofmChange();
+
   setTimeout(getDate, 0);
 
   setTimeout(()=>{
+
 
 years.classList.add('yearsOut');
 
@@ -2927,7 +3188,18 @@ months.classList.add('monthsOut');
 
 days.classList.add('daysOut');
 
+
+years.classList.remove('hiddening');
+
+fonCenterPointer.style.bottom = '291px';
+
+centerPointer.style.bottom = '285px';
+
+year_screen.innerHTML = '2007';
+
 }, 0);
+
+  
 
 });
 
@@ -3059,6 +3331,14 @@ months.classList.add('monthsOut');
 days.classList.add('daysOut');
 
 }, 0);
+
+years.classList.remove('hiddening');
+
+fonCenterPointer.style.bottom = '291px';
+
+centerPointer.style.bottom = '285px';
+
+year_screen.innerHTML = '2007';
 
 });
 
@@ -3395,17 +3675,35 @@ function checkPositionDay() {
 
 function centeredYearSpanFinder(){
 
+
+  if(window.innerHeight > window.innerWidth){
+
+
   year_screen.innerHTML = yearSpanArr.filter(s=>{
 
   return s.getBoundingClientRect().left > ((screen.width/2)-(s.getBoundingClientRect().width/2))-20 && s.getBoundingClientRect().left < ((screen.width/2)-(s.getBoundingClientRect().width/2))+20 && !s.classList.contains('opacityToZero') && (s.getBoundingClientRect().bottom < screen.height)
 
 }).map(s=>s.innerHTML);
 
+
+  } else {
+
+    year_screen.innerHTML = yearSpanArr.filter(s=>{
+
+  return s.getBoundingClientRect().left > ((screen.height/2)-(s.getBoundingClientRect().width/2))-20 && s.getBoundingClientRect().left < ((screen.height/2)-(s.getBoundingClientRect().width/2))+20 && !s.classList.contains('opacityToZero') && (s.getBoundingClientRect().bottom < screen.width)
+
+}).map(s=>s.innerHTML);
+
+  }
+
 }
 
 
 
 function centeredMonthSpanFinder(){
+
+
+  if(window.innerHeight > window.innerWidth){
 
   
 
@@ -3416,6 +3714,17 @@ month_screen.innerHTML = monthSpanArr.filter(s=>{
 }).map(s=>s.innerHTML);
 
 
+  } else {
+
+    month_screen.innerHTML = monthSpanArr.filter(s=>{
+
+  return s.getBoundingClientRect().left > ((screen.height/2)-(s.getBoundingClientRect().width/2))-10 && s.getBoundingClientRect().left < ((screen.height/2)-(s.getBoundingClientRect().width/2))+10 && (s.getBoundingClientRect().bottom < screen.width)
+
+}).map(s=>s.innerHTML);
+
+  }
+
+
 }
 
 
@@ -3423,11 +3732,26 @@ month_screen.innerHTML = monthSpanArr.filter(s=>{
 function centeredDaySpanFinder(){
 
 
+  if(window.innerHeight > window.innerWidth){
+
+
+
   day_screen.innerHTML = daySpanArr.filter(s=>{
 
   return s.getBoundingClientRect().left > ((screen.width/2)-(s.getBoundingClientRect().width/2))-10 && s.getBoundingClientRect().left < ((screen.width/2)-(s.getBoundingClientRect().width/2))+10 && !s.classList.contains('opacityToZero') && (s.getBoundingClientRect().bottom < screen.height)
 
 }).map(s=>s.innerHTML);
+
+
+  } else {
+
+  day_screen.innerHTML = daySpanArr.filter(s=>{
+
+  return s.getBoundingClientRect().left > ((screen.height/2)-(s.getBoundingClientRect().width/2))-10 && s.getBoundingClientRect().left < ((screen.height/2)-(s.getBoundingClientRect().width/2))+10 && !s.classList.contains('opacityToZero') && ((s.getBoundingClientRect().bottom + 50) < screen.width)
+
+}).map(s=>s.innerHTML);
+
+  }
 
 
 }
