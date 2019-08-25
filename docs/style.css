@@ -4,6 +4,8 @@
 
   --mainRed: #CB3C25;
 
+  --mainWhite: #ffffff;
+
 }
 
 
@@ -26,11 +28,11 @@ html {
 
   background-color: var(--mainBg);
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   font-family: AvenirNext-UltraLight;
 
-  //font-family: San-Francisko;
+  // font-family: Gillroy;
 
   overflow: hidden;
 
@@ -52,7 +54,7 @@ html {
 
   z-index: 590;
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   //transform: scale(.4);
 
@@ -81,7 +83,7 @@ html {
 
 #fonCenterPointer {
 
-  background: #333e4e;
+  background: var(--mainBg);
 
   position: fixed;
 
@@ -131,13 +133,34 @@ html {
 
   top: 75px;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   text-align: center;
 
   font-size: 1.618rem;
 
   font-weight: 600;
+
+}
+
+
+#rename {
+
+  background: transparent;
+
+  border: 1px solid var(--mainWhite);
+
+  border-radius: 3px;
+
+  font-size: 1rem;
+
+  color: var(--mainWhite);
+
+  width: 100%;
+
+  margin: 10px auto;
+
+  padding: 6px 3px;
 
 }
 
@@ -164,13 +187,13 @@ html {
 
   border-radius: 50%;
 
-  background: #ffffff;
+  background: var(--mainWhite);
 
   text-align: center;
 
   font-weight: 800;
 
-  color: #333e4e;
+  color: var(--mainBg);
 
 }
 
@@ -217,7 +240,7 @@ html {
 
   background-color: #CB3C25;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
 }
 
@@ -347,7 +370,7 @@ html {
 
   border-radius: 3px;
 
-  background-color: #ffffff;
+  background-color: var(--mainWhite);
 
   z-index: 500;
 
@@ -372,7 +395,7 @@ html {
 
   transform: translate(-50%, -50%);
 
-  color: #333e4e;
+  color: var(--mainBg);
 
   //border: 1px solid rgba(45,45,45.1);
 
@@ -441,7 +464,7 @@ html {
 
   border-radius: 3px;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   padding: 10px 0px;
 
@@ -460,7 +483,7 @@ html {
 
   float: left;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   margin-left: 20px;
 
@@ -495,7 +518,7 @@ html {
 
   float: right;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   margin-right: 20px;
 
@@ -556,7 +579,7 @@ html {
 
   text-align: center;
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
   border-radius: 3px;
 
@@ -607,7 +630,7 @@ html {
 
 .loader {
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   position: fixed;
 
@@ -686,7 +709,7 @@ main {
 
 header {
 
-  //background-color: #333e4e;
+  //background-color: var(--mainBg);
 
   position: fixed;
 
@@ -716,6 +739,25 @@ header {
   z-index: 50;
 
 }
+
+
+#groupsTitle {
+
+  position: fixed;
+
+  left: 64px;
+
+  top: 18px;
+
+  height: 64px;
+
+  font-size: 1.4rem;
+
+  font-weight: 700;
+
+  color: var(--mainRed);
+
+} 
 
 
 .sandwich > * {
@@ -760,7 +802,7 @@ header {
 
   //padding-right: 1px;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   //width: 100%;
 
@@ -833,11 +875,43 @@ header {
 }
 
 
+.allListHeader {
+
+  //background: rgba(0,0,0,.1);
+
+}
+
+
+.groupLine {
+
+  width: 100%;
+
+  position: relative;
+
+  display: block;
+
+  text-align: left;
+
+  padding-bottom: 8.5px;
+
+  border-bottom: 8px solid rgba(0,0,0,.1);
+
+  margin-bottom: 40px;
+
+  font-size: 1.4rem;
+
+  font-weight: 700;
+
+  //color: rgba(45,45,45,.5);
+
+} 
+
+
 #linksInMenu {
 
   font-size: 1.24rem;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   position: absolute;
 
@@ -928,7 +1002,7 @@ header {
 
   height: auto;
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   position: absolute;
 
@@ -987,7 +1061,7 @@ header {
 
   float: left;
 
-  color: white;
+  color: var(--mainWhite);
 
   //transform: translate(6%, 112%);
 
@@ -1005,7 +1079,7 @@ header {
 
   width: 100%;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   min-height: 50px;
 
@@ -1016,6 +1090,7 @@ header {
   background: transparent;
 
 }
+
 
 
 .fieldHolder > input:focus, .fieldHolder > textarea:focus {
@@ -1029,7 +1104,7 @@ header {
 
   //background-color: #b6c4d7;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   text-align: center;
 
@@ -1061,7 +1136,7 @@ header {
 
   outline: none;
 
-  color: #ffffff;
+  color: var(--mainWhite);
 
   background-color: transparent;
 
@@ -1074,18 +1149,18 @@ header {
 
 .addBtnDiv:hover {
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
-  box-shadow: 0 0 4px 0 #ffffff;
+  box-shadow: 0 0 4px 0 var(--mainWhite);
 
 }
 
 
 .addBtnDiv:active {
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
-  box-shadow: 0 0 10px 0 #ffffff;
+  box-shadow: 0 0 10px 0 var(--mainWhite);
 
 }
 
@@ -1116,16 +1191,38 @@ header {
 
   min-height: 90vh;
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   color: #7d887a;
 
 } 
 
 
+
+.groupsChangeDiv {
+
+  position: absolute;
+
+  width: 80%;
+
+  top: 64px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  min-height: 90vh;
+
+  background-color: var(--mainBg);
+
+  color: var(--mainWhite);
+
+}
+
+
 .inputForSearch {
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
   //width: 80%;
 
@@ -1150,7 +1247,7 @@ header {
 
   //text-align: right;
 
-  color: #333e4e;
+  color: var(--mainBg);
 
   margin-bottom: 25px;
 
@@ -1226,7 +1323,7 @@ header {
 
   border-radius: 0px;
 
-  background-color: #ffffff;
+  background-color: var(--mainWhite);
 
   z-index: 500;
 
@@ -1293,7 +1390,7 @@ header {
 
 .radioHolder > input {
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
   //width: 21px;
 
@@ -1327,13 +1424,14 @@ header {
 
   border-radius: 0%;
 
-  background-color: #ffffff;
+  background-color: var(--mainWhite);
 
-  color: #333e4e;
+  color: var(--mainBg);
 
   border: 2px solid rgba(0,0,0,.2);
 
 }
+
 
 
 #additBtn {
@@ -1382,7 +1480,7 @@ header {
 
   left: 50%;
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
   border-radius: 8px;
 
@@ -1409,7 +1507,7 @@ header {
 
   filter: blur(1px);
 
-  color: #333e4e;
+  color: var(--mainBg);
 
 }
 
@@ -1420,7 +1518,7 @@ header {
 
   z-index: 95;
 
-  color: #333e4e;
+  color: var(--mainBg);
 
 }   
 
@@ -1433,7 +1531,7 @@ header {
 
   filter: blur(1px);
 
-  color: #333e4e;
+  color: var(--mainBg);
 
 }
 
@@ -1563,9 +1661,9 @@ svg {
 
   margin: 0 5px 20px 0;
 
-  padding: 13.5px 20px;
+  padding: 5px 20px;
 
-  width: 70%;
+  width: 90%;
 
   font-size: 1rem;
 
@@ -1581,11 +1679,48 @@ svg {
 
   background-color: #BDC6BC;
 
-  border: 1px solid #ffffff;
+  border: 1px solid var(--mainWhite);
 
   border-radius: 3px;
 
 } 
+
+
+#deleteName {
+
+  position: relative;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  margin: 0 5px 20px 0;
+
+  padding: 5px 20px;
+
+  width: 90%;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  outline: none;
+
+  color: var(--mainWhite);
+
+  background-color: var(--mainRed);
+
+  border: 1px solid var(--mainWhite);
+
+  border-radius: 3px;
+
+} 
+
+
 
 
 
@@ -1679,9 +1814,9 @@ td {
 
   transition      : all 0.9s cubic-bezier(0.19, 1, 0.22, 1);
 
-  border-top      : 1px solid #ffffff;
+  border-top      : 1px solid var(--mainWhite);
 
-  background-color: #333e4e;
+  background-color: var(--mainBg);
 
   bottom          : 0;
 
@@ -1731,11 +1866,11 @@ td {
 
 .pauseMode {
 
-  border: 1px solid #333e4e;
+  border: 1px solid var(--mainBg);
 
   background-color: #BDC6BC;
 
-  box-shadow: inset -0px 0 5px 0 #333e4e, inset  0px 0 5px 0 #333e4e;
+  box-shadow: inset -0px 0 5px 0 var(--mainBg), inset  0px 0 5px 0 var(--mainBg);
 
   transform: translateY(-50%) scale(.6);
 
@@ -1790,6 +1925,202 @@ td {
 
 }
 
+
+.miniCrossForDate {
+
+  position: absolute;
+
+  top: 50%;
+
+  right: 1px;
+
+  width: 50px;
+
+  height: 50px;
+
+  transform: translateY(-50%);
+
+  //background: snow;
+
+  border-radius: 50%;
+
+} 
+
+
+.miniCrossForDate svg {
+
+  width: 100%;
+
+}
+
+
+#addGroup {
+
+  width: 90%;
+
+  height: 100%;
+
+  min-height: 100%;
+
+  position: absolute;
+
+  top: 60px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  //margin: 0 auto;
+
+  //z-index: 700;
+
+  //background: var(--mainRed);
+
+  border-radius: 30px 30px 0 0;
+
+} 
+
+
+
+#groupName {
+
+  width: 100%;
+
+  color: var(--mainWhite);
+
+  min-height: 50px;
+
+  font-size: 1rem;
+
+  padding-left: 3px;
+
+  background: transparent;
+
+} 
+
+
+
+#groupSelect {
+
+  width: 49%;
+
+  font-size: 1rem;
+
+  border-radius: 0%;
+
+  background-color: #ffffff;
+
+  color: var(--mainBg);
+
+  border: 2px solid rgba(0,0,0,.2);
+
+} 
+
+
+
+#groups > *{
+
+  width: 40%;
+
+  display: inline;
+
+} 
+
+
+.groupChangeSelects > *{
+
+  width: 40%;
+
+  display: inline;
+
+} 
+
+
+
+#groups > label{
+
+  color: #ffffff;
+
+  border: none;
+
+  background: transparent;
+
+} 
+
+
+.groupChangeSelects > label{
+
+  color: #ffffff;
+
+  border: none;
+
+  background: transparent;
+
+} 
+
+
+.selectForGroupOrder {
+
+  width: 90%;
+
+  float: right;
+
+} 
+
+
+
+.btnsDeleteName {
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  text-align: center;
+
+}
+
+
+.btnsDeleteName > *{
+
+  border: none;
+
+  width: 100%;
+
+  border-radius: 3px;
+
+  //background: #ffffff;
+
+  //color: var(--mainBg);
+
+  display: block;
+
+  margin: 10px auto;
+
+  padding: 15px 10px;
+
+  font-size: 1.1rem;
+
+}
+
+
+.btnsDeleteName > *:first-child {
+
+  background: #ffffff;
+
+  color: var(--mainBg);
+
+}
+
+
+.btnsDeleteName > *:last-child {
+
+  background: var(--mainRed);
+
+  color: #ffffff;
+
+}
+
+ 
 
 
 

@@ -7,9 +7,6 @@
   хранить часть данных в локалСтор и для автозагрузки сравнивать с данными в Моби
 
 
-2) режим редактирования
-
-
 4) адаптивный дизайн
 
 
@@ -28,17 +25,29 @@
 11) после ввода инпута лейблы
 
 
-12) формат кипера для именин без года
-
-
-14) возможность стереть запись с кипера
-
-
 13) верификация имени и тп. не должно быть пробелов
 
 
-14) подумать над создаеием групп. при поминовении будет яснее кто есть кто
+15) после создания группы убрать свечение кнопки
 
+
+18) первое редактирование идет по плану. далее путаница при расставлении данных в таблицу ( вместо муж пола женский );
+
+
+
+22) тип инпута в создании гр. почему показывает перейти
+
+
+23) не удаляет вновь созданную большую группу 
+
+
+24) темная<=>светлая темы
+
+
+25) в календаре запретить прокрутку по краям
+
+
+26) система оповещения годовщин
 
 
 */
@@ -75,11 +84,29 @@
 const myKey = 'apiKey=sKw_oqVSmdk0cj8XolfkSyap__JKRPLt';
 
 
-let speed = 19;  /* чем меньше число, тем выше скорость */
+const myCollection = 'iereiAleksandrBartov';
+
+
+/*  iereiAleksandrBartov  */
+
+
+let speed = 18;  /* чем меньше число, тем выше скорость */
 
 
 
 const endings = [
+
+  ['сий', 'сия'],
+
+  ['гей', 'гия'],
+
+  ['ман', 'мана'],
+
+  ['тор', 'тора'],
+
+  ['Зоя', 'Зои'],
+
+  ['дра', 'дры'],
 
   ['иил', 'иила'],
 
@@ -179,6 +206,16 @@ const endings = [
 const logoLetters = document.querySelectorAll(".test");
 
 
+let groupsOrder = [];
+
+
+let userGroup = '';
+
+
+let renamedGroup;
+
+
+
 let last_known_scroll_position = 0;
 
 let countSearched;
@@ -193,11 +230,18 @@ let pausePressed = false;
 
 let bckgrnd;
 
+let oUpok;
+
 
 let deepestPoint, lastCounterState;
 
 
 let editMode = false;
+
+
+let groupsArr = new Set();
+
+let groupToDel;
 
 
 const allFormFields = [...document.querySelectorAll('.thisIsWhatToSave')];
@@ -234,10 +278,16 @@ const hMenu = document.getElementsByClassName('hMenu')[0];
 const addListTag = document.getElementsByClassName('addListTag')[0];
 
 
+const addGroupTag = document.getElementsByClassName('addGroupTag')[0];
+
+
 const allListTag = document.getElementsByClassName('allListTag')[0];
 
 
 const changeListTag = document.getElementsByClassName('changeListTag')[0];
+
+
+const changeGroupTag = document.getElementsByClassName('changeGroupTag')[0];
 
 
 const formHolder = document.getElementsByClassName('formHolder')[0];
@@ -282,6 +332,19 @@ let myReq;
    const cancelReq = window.cancelAnimationFrame;
 
 
+  let startGroupsArr;
+
+
+if(!localStorage.getItem('myOrder')) {
+
+  startGroupsArr = '';
+
+} else {
+
+  startGroupsArr = localStorage.getItem('myOrder').split(',');
+
+}
+
 
 
 
@@ -300,6 +363,1325 @@ let myReq;
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 @@@@@@ */
+
+
+// """"" изменение порядка показа групп """"""
+
+
+function changingGroupOrder() {
+
+  
+
+  const indexOfChoosenSel = [...document.querySelectorAll('.selectForGroupOrder')].indexOf(this);
+
+
+  const selectedGroup = [...this.childNodes].filter(o=>o.selected)[0].value;
+
+
+  const indexOfTheSameSel = startGroupsArr.indexOf(selectedGroup);
+
+
+[...[...document.querySelectorAll('.selectForGroupOrder')][indexOfTheSameSel].childNodes].forEach(o=>{
+
+  if(o.value === startGroupsArr[indexOfChoosenSel]) o.selected = true
+
+});
+
+
+
+setTimeout(()=>{
+
+  startGroupsArr = [...document.querySelectorAll('.selectForGroupOrder')].map(s=>{
+
+return [...s.childNodes].filter(o=>o.selected)[0].value;
+
+});
+
+
+  JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
+
+}, 0);
+
+
+}
+
+
+
+// &&&&)))(((( конец порядка ::::::::::::::::::::
+
+
+
+
+
+// ------- режим поминовения. определяет если в центре ---------------
+
+
+function getCenterOfPage() {
+
+[...document.querySelectorAll('.commonBox')].forEach(div=>{
+
+  
+
+  if((div.offsetTop-window.scrollY) < (screen.height/8)){
+
+div.style.opacity = 0; 
+
+ } else if((div.offsetTop-window.scrollY) > (screen.height/2)){
+
+div.style.opacity = 0; 
+
+ } else {
+
+  div.style.opacity = 1;
+
+ }
+
+});
+
+
+if(oZdraviiClicked) {
+
+[...document.querySelectorAll('.groupLine')]
+
+    .filter(t=>t.classList.contains('oZ'))
+
+    .forEach(t=>{
+
+  if((t.offsetTop-window.scrollY) < -70) groupsTitle.innerHTML = t.innerHTML
+
+});
+
+} else {
+
+  [...document.querySelectorAll('.groupLine')]
+
+    .filter(t=>t.classList.contains('oU'))
+
+    .forEach(t=>{
+
+  if((t.offsetTop-window.scrollY) < -70) {
+
+groupsTitle.innerHTML = t.innerHTML
+
+groupsTitle.style.color = '#01142F';
+
+}
+
+});
+
+}
+
+
+}
+
+
+
+
+
+
+// ••••••••••••••••••••••••••••
+
+
+
+function downloadNewDataFromMobi(allNamesArr) {
+
+
+setTimeout(()=>{
+
+
+  let checker = new Set(); // чтобы не повторять имя в другой группе
+
+
+
+let actualArr = startGroupsArr || [...groupsArr];
+
+
+  oZdravii.innerHTML = `
+
+    
+
+     <div class='allListHeader'>
+
+     <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+     </br>
+
+    <h3 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
+
+    </div>
+
+    </br>
+
+    </br>
+
+    <div class='showedPersonsList'>${actualArr
+
+    .map(g=>{
+
+      groupsOrder.push(g);
+
+      
+
+      return `
+
+        <span class='groupLine oZ'>${g}</span>
+
+        <div>
+
+          ${allNamesArr
+
+  .filter(data=>data.live == 'о здравии' && data.group!==undefined && data.group.includes(g) && ![...checker].includes(data.count))
+
+  .map(data=>{
+
+
+  checker.add(data.count);
+
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}
+
+        </div>
+
+      `
+
+    })
+
+    .join('</br>')}
+
+  </br></br></br></br>+ + +</br></br></br></br>
+
+    ${allNamesArr
+
+  .sort()
+
+  .filter(data=>data.live == 'о здравии' && data.group===undefined)
+
+  .map(data=>{
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}
+
+  </br></br></br></br>+ + +</br></br></br></br>
+
+    
+
+</div>
+
+`;
+
+}, 0);
+
+
+
+
+
+setTimeout(()=>{
+
+
+  let checker = new Set(); 
+
+
+
+let actualArr = startGroupsArr || [...groupsArr];
+
+
+  oUpokoenii.innerHTML = `
+
+
+    <div class='allListHeader'>
+
+    <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+     </br>
+
+    <h3 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
+
+    </div>
+
+    </br></br>
+
+    <div class='showedPersonsList'>${actualArr
+
+    .map(g=>{
+
+      return `
+
+        <span class='groupLine oU'>${g}</span>
+
+        <div>
+
+          ${allNamesArr
+
+  .filter(data=>data.live == 'о упокоении' && data.group!==undefined && data.group.includes(g) && ![...checker].includes(data.count))
+
+  .sort((a, b)=>a.sex<b.sex)
+
+  .map(data=>{
+
+
+  checker.add(data.count);
+
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}
+
+        </div>
+
+      `
+
+    })
+
+    .join('</br>')}
+
+  </br></br></br></br>+ + +</br></br></br></br>
+
+   ${allNamesArr
+
+  .sort()
+
+  .filter(data=>data.live == 'о упокоении' && data.group===undefined)
+
+  .map(data=>{
+
+  return (`<div class='commonBox'>
+
+    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
+
+    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
+
+    </div>
+
+  `);
+
+}).join('</br>')}
+
+  </br></br></br></br>+ + +</br></br></br></br>
+
+</div>
+
+`;
+
+}, 0);
+
+}
+
+
+
+
+// переименование группы ____
+
+//_____________________________
+
+
+function toRenameGroup() {
+
+  groupToRename = [...this.childNodes].filter(c=>c.selected)
+
+.map(o=>o.value)[0];
+
+
+  if(groupToRename==='0') return;
+
+
+  myAlert(`переименовать группу ${groupToRename}:</br><input autofocus id='rename' value='${groupToRename}' /></br>
+
+ <div class='btnsDeleteName'>
+
+<button id='renameGroupCancelBtn'>отмена</button><button id='renameGroupOkBtn'>сохранить</button>
+
+</div>
+
+`);
+
+renameGroupCancelBtn.addEventListener('click', cancelDel);
+
+
+renameGroupOkBtn.addEventListener('click', okGroupRename);
+
+}
+
+
+
+
+// окончат переименование <<<~~~ >>>~~~~~~~~<<<<<<~~~~~>>>>>
+
+
+  function okGroupRename() {
+
+
+
+   renamedGroup =  [...document.getElementsByClassName('msgDiv')[0].childNodes].filter(n=>n.nodeName==='INPUT').map(n=>n.value);
+
+
+   //alert(`${groupToRename}, ${renamedGroup}`);
+
+    document.getElementsByClassName('msgDiv')[0].innerHTML = `сохраняем изменения`;
+
+  // ------
+
+
+
+   loadedArr.filter(p=>p.group && p.group.includes(groupToRename))
+
+    .forEach(person=>{
+
+      const IDmobi = person._id.$oid;
+
+
+   let {
+
+   thatId, live, sex, name, surname, fathername, dateOfBirth, dateOfBapt, dateOfSaint, dateDeath, dateOfVows, dateOfOrdinationDiak, dateOfOrdinationPriest, dateOfOrdinationBish, dateOfEnthron, comment, other, count, group
+
+   } = person;
+
+
+   group = group.filter(g=>g!==groupToRename);
+
+   //console.log(newGroup);
+
+   group.push(renamedGroup[0]);
+
+   //console.log(newGroup);
+
+
+
+   let editData = JSON.stringify({
+
+    live,
+
+    sex,
+
+    name, 
+
+    surname, 
+
+    fathername,
+
+    dateOfBirth,
+
+    dateOfBapt,
+
+    dateOfSaint,
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+    count,
+
+    group
+
+  });
+
+
+  const options = { 
+
+  method: 'PUT',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  },
+
+  body: editData
+
+};
+
+
+  
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}/${IDmobi}?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(person=>{
+
+// загружаем обновленные данные
+
+// обновляем и список групп
+
+  
+
+})
+
+.catch(err=>console.log(err));
+
+
+  });
+
+
+
+  setTimeout(()=>{
+
+    fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+  
+
+  loadedArr = allNamesArr;
+
+
+  setTimeout(groupeDefine, 0);
+
+
+  setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
+
+
+  document.getElementsByClassName('msgDiv')[0].innerHTML = `Группа переименована!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+
+})
+
+.catch(e=>console.log(e));
+
+  }, 0);
+
+
+ 
+
+  }
+
+  
+
+
+// >>>>> удаление группы <<<<<
+
+// >>>>>>>>>>>>>>>>><<<<<<<<<<<<
+
+
+function toDeleteGroup() {
+
+  groupToDel = [...this.childNodes].filter(c=>c.selected)
+
+.map(o=>o.value)[0];
+
+
+  if(groupToDel==='0') return;
+
+
+  myAlert(`вы уверены, что хотите удалить группу:</br><strong>'${groupToDel}'</strong>?</br>
+
+ <div class='btnsDeleteName'>
+
+<button id='deleteGroupCancelBtn'>отмена</button><button id='deleteGroupOkBtn'>удалить</button>
+
+</div>
+
+`);
+
+
+  deleteGroupCancelBtn.addEventListener('click', cancelDel);
+
+
+deleteGroupOkBtn.addEventListener('click', okGroupDel);
+
+
+
+}
+
+
+// окончательное удаление-----
+
+
+function okGroupDel(){
+
+  document.getElementsByClassName('msgDiv')[0].innerHTML = `удаляем группу ${groupToDel}!`;
+
+
+  groupsArr.delete(groupToDel);
+
+
+  loadedArr.filter(p=>p.group && p.group.includes(groupToDel))
+
+    .forEach(person=>{
+
+      const IDmobi = person._id.$oid;
+
+
+
+   let {
+
+   thatId, live, sex, name, surname, fathername, dateOfBirth, dateOfBapt, dateOfSaint, dateDeath, dateOfVows, dateOfOrdinationDiak, dateOfOrdinationPriest, dateOfOrdinationBish, dateOfEnthron, comment, other, count, group
+
+   } = person;
+
+
+   group = group.filter(g=>g!==groupToDel);
+
+   
+
+
+   let editData = JSON.stringify({
+
+    live,
+
+    sex,
+
+    name, 
+
+    surname, 
+
+    fathername,
+
+    dateOfBirth,
+
+    dateOfBapt,
+
+    dateOfSaint,
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+    count,
+
+    group
+
+  });
+
+
+  const options = { 
+
+  method: 'PUT',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  },
+
+  body: editData
+
+};
+
+
+  
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}/${IDmobi}?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(person=>{
+
+// загружаем обновленные данные
+
+// обновляем и список групп
+
+
+})
+
+.catch(err=>console.log(err));
+
+
+  });
+
+
+
+
+ 
+
+  setTimeout(()=>{
+
+    fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+  loadedArr = allNamesArr;
+
+
+  setTimeout(groupeDefine, 0);
+
+
+  setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
+
+
+  document.getElementsByClassName('msgDiv')[0].innerHTML = `Группа ${groupToDel} удалена!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+
+})
+
+.catch(e=>console.log(e));
+
+  }, 0);
+
+  
+
+}
+
+
+// >>>>> удаление конец <<<<<
+
+
+
+
+// •••••• формируем список групп ••••••••
+
+
+function groupeDefine(){
+
+
+  groupsArr.clear();
+
+  
+
+  let counter = 0;
+
+
+  loadedArr.filter(p=>p.group)
+
+           .map(p=>p.group)
+
+           .forEach(arr=>{
+
+    for ( const g of arr ) {
+
+      groupsArr.add(g);
+
+    }
+
+  });
+
+
+  //alert([...groupsArr]);
+
+
+    groupsSelect.innerHTML = 
+
+    [...groupsArr].map(g=>{
+
+      return `
+
+        <option class='optionForGroup' value='${g==undefined ? 0 : g}'>${g==undefined ? '' : g}</option>`;
+
+    }).join('');
+
+
+
+
+    groupDel.innerHTML = `
+
+    <option value='0'></option>
+
+    ${[...groupsArr].map(g=>{
+
+      return `
+
+        <option value='${g==undefined ? 0 : g}'>${g==undefined ? '' : g}</option>`;
+
+    }).join('')}
+
+    `;
+
+
+    groupRename.innerHTML = `
+
+    <option value='0'></option>
+
+    ${[...groupsArr].map(g=>{
+
+      return `
+
+        <option value='${g==undefined ? 0 : g}'>${g==undefined ? '' : g}</option>`;
+
+    }).join('')}
+
+    `;
+
+
+    setTimeout(()=>{
+
+document.getElementsByClassName('listGroupsForOrder')[0].innerHTML = [...groupsArr].map(gr=>{
+
+      counter++;
+
+
+      return `
+
+         <div class='selectsHolder groupChangeSelects'>
+
+      <label><strong>${counter}</strong></label>
+
+     <select class='selectForGroupOrder'>
+
+     ${[...groupsArr].map(g=>{
+
+     if(groupsOrder[counter-1]===g){
+
+            return `
+
+        <option value='${g==undefined ? 0 : g}' selected>${g==undefined ? '' : g}</option>`
+
+      }else{return `
+
+        <option value='${g==undefined ? 0 : g}'>${g==undefined ? '' : g}</option>`}
+
+    }).join('')}
+
+  </select>
+
+   </div>`;
+
+    }).join('');
+
+
+  }, 0);
+
+
+  }
+
+
+  // ••••• конец работы с группами••••••
+
+
+
+
+
+
+
+// функция удаления записи @@@@@@@@@ >>>>>>>><<<<<<<<<<< ##########<<<
+
+
+function deleteNote() {
+
+
+  const personToDel = loadedArr
+
+        .filter(p=>p._id.$oid===IDtoEdit)[0];
+
+
+  myAlert(`вы уверены, что хотите удалить запись:</br>${personToDel.other} ${personToDel.name} ${personToDel.surname}?</br>
+
+ <div class='btnsDeleteName'>
+
+<button id='deleteCancelBtn'>отмена</button><button id='deleteOkBtn'>удалить</button>
+
+</div>
+
+`);
+
+
+  deleteCancelBtn.addEventListener('click', cancelDel);
+
+
+deleteOkBtn.addEventListener('click', okDel);
+
+
+
+}
+
+
+
+
+function cancelDel(){
+
+   alertFon.classList.remove('showAlert');
+
+} 
+
+
+
+function okDel(){
+
+  document.getElementsByClassName('msgDiv')[0].innerHTML = `удаляем запись!`;
+
+
+
+const options = { 
+
+  method: 'DELETE',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  }
+
+};
+
+
+  
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}/${IDtoEdit}?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(person=>{
+
+   document.getElementsByClassName('msgDiv')[0].innerHTML = `запись ${person.other} ${person.name} ${person.surname} удалена!`;
+
+
+setTimeout(()=>{alertFon.classList.remove('showAlert');},1500);
+
+
+
+editMode = false;
+
+
+searchingForChange.classList.remove('hiddening');
+
+formHolder.style.opacity = 0;
+
+formHolder.classList.add('hiddening');
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
+
+
+btnAdd.innerHTML = 'добавить';
+
+
+liveChoice.checked = false;
+
+sexMChoice.checked = false;
+
+deathChoice.checked = false;
+
+sexFChoice.checked = false;
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание новой записи</h3>
+
+    <h5>( прежде всего выбирите тип синодика и пол )</h5>`;
+
+
+  addForm.reset();
+
+btnAdd.classList.add('hiddening');
+
+
+forMaleLive.classList.add('hiddening');
+
+forFemaleLive.classList.add('hiddening');
+
+forMaleDeath.classList.add('hiddening');
+
+forFemaleDeath.classList.add('hiddening');
+
+
+newCreatedData
+
+  .filter(d=>d.type != 'radio')
+
+  .forEach(i=>i.disabled=true);
+
+
+
+// после того, как данные изменены, обновляем ариейобщий и поле поиска нужно опустошить
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+  loadedArr = allNamesArr;
+
+  document.getElementsByClassName('inputForSearch')[0].value = '';
+
+  document.getElementsByClassName('searchResults')[0].innerHTML = '';
+
+
+}).catch(e=>console.log(e));
+
+
+
+ }).catch(err=>console.log(err));
+
+}
+
+
+
+// конец удаления ~~~~~~~~~~~~~
+
+
+
+
+
+// создание новой группы •••••• •••••••••••••••••••••••••••••••
+
+
+function newGroupCreate() {
+
+
+let selectedPersons = []; 
+
+
+if([...groupSelect].filter(o=>o.selected).length==0) {
+
+  myAlert('группа не может быть пустой! выберите по крайней мере одно имя!');
+
+  setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  } else if(groupName.value==='') {
+
+    myAlert('введите название группы!');
+
+  setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  } else if([...groupsArr].includes(groupName.value)) {
+
+    myAlert(`группа ${groupName.value} уже существует. введите другое название!`);
+
+  groupName.value = '';
+
+  setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  } else {
+
+[...groupSelect].filter(o=>o.selected).map(o=>o.value).forEach(c=>{
+
+    selectedPersons.push(loadedArr.filter(person=>person.count==c));
+
+});
+
+   setTimeout(editForGroup(selectedPersons, groupName.value), 0);
+
+  }
+
+}
+
+
+// конец созд группы •••••••••• •••••••••••••••••••••••••••••••
+
+
+
+function editForGroup(arr, grTitle){
+
+
+  myAlert('данные сохраняются');
+
+  arr
+
+   .map(a=>a[0])
+
+   .forEach(person=>{
+
+      const IDmobi = person._id.$oid;
+
+
+
+   let {
+
+   thatId, live, sex, name, surname, fathername, dateOfBirth, dateOfBapt, dateOfSaint, dateDeath, dateOfVows, dateOfOrdinationDiak, dateOfOrdinationPriest, dateOfOrdinationBish, dateOfEnthron, comment, other, count, group
+
+   } = person;
+
+
+   if(group == undefined) group = [];
+
+
+   group.push(grTitle);
+
+
+   let editData = JSON.stringify({
+
+    live,
+
+    sex,
+
+    name, 
+
+    surname, 
+
+    fathername,
+
+    dateOfBirth,
+
+    dateOfBapt,
+
+    dateOfSaint,
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+    count,
+
+    group
+
+  });
+
+
+  const options = { 
+
+  method: 'PUT',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  },
+
+  body: editData
+
+};
+
+
+  
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}/${IDmobi}?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(person=>{
+
+})
+
+.catch(e=>console.log(e));
+
+     }
+
+    );
+
+
+// загружаем обновленные данные
+
+// обновляем и список групп
+
+
+  setTimeout(()=>{
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+  loadedArr = allNamesArr;
+
+  groupeDefine();
+
+[...groupSelect].forEach(o=>o.selected=false);
+
+document.getElementsByClassName('msgDiv')[0].innerHTML = `Группа ${grTitle} создана!`;
+
+groupName.value = '';
+
+  setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+}).catch(e=>console.log(e));
+
+}, 0);
+
+
+}
+
+
+
+// удаление даты в кипере
+
+
+function delDate(){
+
+ if(editMode) {
+
+   lookAtFofmChange();
+
+  }
+
+this.previousElementSibling.value = '';
+
+this.remove();
+
+}
+
+
+
+
+
+// ---- функция проверки селектов и отключения ненужных полей формы
+
+
+function selectRules() {
+
+
+  [...document.getElementsByTagName('option')].forEach(o=>{
+
+      if(o.value==='патр.'&&o.selected) {
+
+   [...formInputs].forEach(i=>i.disabled=false);
+
+  if(oUpok) {dateOfDeathInput.disabled=false}else{dateOfDeathInput.disabled=true}
+
+  } else if((o.value==='еп.'||o.value==='митр.'||o.value==='архиеп.')&&o.selected) {
+
+  [...formInputs].forEach(i=>i.disabled=false);
+
+  dateOfEnthronInput.disabled = true;
+
+  if(oUpok) {dateOfDeathInput.disabled=false}else{dateOfDeathInput.disabled=true}
+
+  }else if((o.value==='иер.'||o.value==='прот.')&&o.selected) {
+
+
+  [...formInputs].forEach(i=>i.disabled=false);
+
+  dateOfEnthronInput.disabled = true;
+
+  dateOfOrdinationBishInput.disabled = true;
+
+dateOfVowsInput.disabled = true;
+
+  if(oUpok) {dateOfDeathInput.disabled=false}else{dateOfDeathInput.disabled=true}
+
+  }else if((o.value==='диак.'||o.value==='протод.')&&o.selected) {
+
+
+  [...formInputs].forEach(i=>i.disabled=false);
+
+  dateOfEnthronInput.disabled = true;
+
+  dateOfOrdinationBishInput.disabled = true;
+
+dateOfVowsInput.disabled = true;
+
+dateOfOrdinationPriestInput.disabled = true;
+
+  if(oUpok) {dateOfDeathInput.disabled=false}else{dateOfDeathInput.disabled=true}
+
+  }else if((o.value==='иг.'||o.value==='схииг.'||o.value==='иером.'||o.value==='священноинок')&&o.selected) {
+
+  [...formInputs].forEach(i=>i.disabled=false);
+
+  dateOfEnthronInput.disabled = true;
+
+  dateOfOrdinationBishInput.disabled = true;
+
+  if(oUpok) {dateOfDeathInput.disabled=false}else{dateOfDeathInput.disabled=true}
+
+  }
+
+});
+
+ 
+
+}
+
+
+
+//----- конец функции --------
+
 
     
 
@@ -514,8 +1896,6 @@ function invalidData(msg, el) {
 }
 
 
-
-
 //функция добавления нового лица
 
 
@@ -524,6 +1904,13 @@ function setDataTest() {
 
 
   myAlert('данные сохраняются');
+
+
+  if([...document.getElementsByClassName('miniCrossForDate')].length>0) {
+
+[...document.getElementsByClassName('miniCrossForDate')].forEach(d=>d.remove());
+
+}
 
 
   const radios = newCreatedData
@@ -535,6 +1922,8 @@ function setDataTest() {
 
   const selects = allSelects
 
+   .filter(d=>d.id!=='groupsSelect' && d.id!=='groupDel' && d.id!=='groupRename' && !d.classList.contains('selectForGroupOrder'))
+
    .map(d=>d.value)
 
    .filter(v=>v!=="0");
@@ -542,9 +1931,27 @@ function setDataTest() {
 
   const texts = newCreatedData
 
-   .filter(d=>d.type == 'text')
+   .filter(d=>d.type == 'text' && d.id!=='rename')
 
    .map(i=>i.value);
+
+
+  let group = new Set();
+
+
+  userGroup = [...document.getElementsByClassName('optionForGroup')]
+
+     .filter(o=>o.selected)
+
+     .map(o=>o.value)
+
+     .forEach(v=>{
+
+       if(v==0) return;
+
+       group.add(v);
+
+     });
 
 
 
@@ -601,7 +2008,9 @@ const data = [...radios, ...texts, ...selects];
 
     other,
 
-    count
+    count,
+
+    group: [...group]
 
   });
 
@@ -623,7 +2032,7 @@ const data = [...radios, ...texts, ...selects];
 
   
 
-  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov/${IDtoEdit}?${myKey}`, options)
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}/${IDtoEdit}?${myKey}`, options)
 
 .then(data=>data.json())
 
@@ -641,6 +2050,37 @@ document.getElementsByClassName('msgDiv')[0].innerHTML = `Изменения д�
 alertFon.classList.remove('showAlert');
 
   }, 2000);
+
+
+editMode = false;
+
+
+searchingForChange.classList.remove('hiddening');
+
+formHolder.style.opacity = 0;
+
+formHolder.classList.add('hiddening');
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.addEventListener('click', showEditform));
+
+
+btnAdd.innerHTML = 'добавить';
+
+
+liveChoice.checked = false;
+
+sexMChoice.checked = false;
+
+deathChoice.checked = false;
+
+sexFChoice.checked = false;
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание новой записи</h3>
+
+    <h5>( прежде всего выбирите тип синодика и пол )</h5>`;
+
 
   addForm.reset();
 
@@ -661,6 +2101,30 @@ newCreatedData
   .filter(d=>d.type != 'radio')
 
   .forEach(i=>i.disabled=true);
+
+
+
+// после того, как данные изменены, обновляем ариейобщий и поле поиска нужно опустошить
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+  loadedArr = allNamesArr;
+
+  document.getElementsByClassName('inputForSearch')[0].value = '';
+
+  document.getElementsByClassName('searchResults')[0].innerHTML = '';
+
+
+}).catch(e=>console.log(e));
+
+
+
 
 })
 
@@ -718,7 +2182,9 @@ newCreatedData
 
     other,
 
-    count
+    count,
+
+    group: [...group]
 
   });
 
@@ -740,7 +2206,7 @@ newCreatedData
 };
 
 
-fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`, options)
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`, options)
 
 .then(data=>data.json())
 
@@ -778,6 +2244,24 @@ newCreatedData
   .filter(d=>d.type != 'radio')
 
   .forEach(i=>i.disabled=true);
+
+
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+  loadedArr = allNamesArr;
+
+
+}).catch(e=>console.log(e));
+
+
+
 
 })
 
@@ -850,6 +2334,9 @@ function setSelects() {
   if(liveChoice.checked && sexMChoice.checked) {
 
 
+  oUpok = false;
+
+
   disabledGone('живой');
 
     forMaleLive.classList.remove('hiddening');
@@ -861,6 +2348,9 @@ forMaleDeath.classList.add('hiddening');
 forFemaleDeath.classList.add('hiddening');
 
   } else if(deathChoice.checked && sexFChoice.checked) {
+
+
+  oUpok = true;
 
 
   disabledGone('усопшая');
@@ -875,6 +2365,9 @@ forFemaleDeath.classList.remove('hiddening');
 
   } else if(liveChoice.checked && sexFChoice.checked){
 
+
+  oUpok = false; 
+
   disabledGone('живая');
 
     forFemaleLive.classList.remove('hiddening');
@@ -886,6 +2379,9 @@ forMaleDeath.classList.add('hiddening');
 forFemaleDeath.classList.add('hiddening');
 
   } else if(deathChoice.checked && sexMChoice.checked) {
+
+
+    oUpok = true; 
 
     disabledGone('усопший');
 
@@ -1051,6 +2547,13 @@ setTimeout(()=>{
   function exitEditModeWithoutSave(){
 
 
+  if([...document.getElementsByClassName('miniCrossForDate')].length>0) {
+
+[...document.getElementsByClassName('miniCrossForDate')].forEach(d=>d.remove());
+
+}
+
+
   editMode = false;
 
 
@@ -1058,6 +2561,8 @@ setTimeout(()=>{
 
 
 allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
+
+groupsSelect.removeEventListener('change', lookAtFofmChange, false);
 
 
  searchingForChange.classList.remove('hiddening');
@@ -1110,11 +2615,15 @@ document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание н�
 
 
 
+
 //---функция открытия формы редактирования---------
 
 
 
 function showEditform() {
+
+
+allSelects.filter(d=>d.id!=='groupsSelect').forEach(s=>addEventListener('change', selectRules));
 
 
 editMode = true;
@@ -1143,11 +2652,12 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
 
    IDtoEdit = p._id.$oid;
 
-
-   console.log(p._id.$oid);
+   
 
 
    return `
+
+    <div id='deleteName'>удалить запись</div>
 
     <div id='editCancel'>отменить редактирование</div>
 
@@ -1205,7 +2715,9 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
 
     other,
 
-    count
+    count,
+
+    group
 
  } = person;
 
@@ -1237,6 +2749,18 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
   });
 
 
+
+// устанавливаем группы
+
+
+group == undefined ? console.log('that is old style') : group.forEach(g=>{
+
+  [...document.querySelectorAll(".optionForGroup")].filter(o=>o.value===g).forEach(o=>o.selected=true);
+
+
+});
+
+
 // заполнили инпуты
 
 
@@ -1251,6 +2775,41 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
        if(key==matchName) i.value = person[key]
 
      });
+
+});
+
+
+
+[...document.querySelectorAll(".datePicker")].forEach(input=>{
+
+     if(input.value) {
+
+       let div = document.createElement("div");
+
+div.innerHTML = `
+
+  <svg viewBox="0 0 100 100">
+
+       <circle cx="50" cy="50" r="20" fill="#CB3C25"/>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="4px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M44,44 L56,56 M44,56 L56,44" />
+
+             </g>
+
+           </svg>
+
+`;
+
+div.classList.add("miniCrossForDate");
+
+div.onclick = delDate;
+
+
+input.parentElement.append(div);
+
+     }
 
 });
 
@@ -1298,6 +2857,9 @@ setTimeout(()=>{
 
 allFormFields.forEach(el=>el.addEventListener('change', lookAtFofmChange, false));
 
+
+groupsSelect.addEventListener('change', lookAtFofmChange, false);
+
 }, 200);
 
 
@@ -1305,6 +2867,9 @@ allFormFields.forEach(el=>el.addEventListener('change', lookAtFofmChange, false)
 setTimeout(()=>{
 
   editCancel.addEventListener('click', exitEditModeWithoutSave);
+
+
+deleteName.addEventListener('click', deleteNote);
 
 }, 0);
 
@@ -1326,6 +2891,8 @@ btnAdd.classList.remove('hiddening');
 
 allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
 
+groupsSelect.removeEventListener('change', lookAtFofmChange, false);
+
 
 }
 
@@ -1339,6 +2906,27 @@ allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
 
 
 function openingMenu() {
+
+
+groupsTitle.innerHTML = '';
+
+
+
+[...document.querySelectorAll('.selectForGroupOrder')].forEach(s=>s.removeEventListener('change', changingGroupOrder, false));
+
+
+
+if([...document.getElementsByClassName('miniCrossForDate')].length>0) {
+
+[...document.getElementsByClassName('miniCrossForDate')].forEach(d=>d.remove());
+
+}
+
+
+
+allSelects.forEach(s=>removeEventListener('change', selectRules));
+
+groupsSelect.removeEventListener('change', lookAtFofmChange, false);
 
 
   allFormFields.forEach(el=>el.removeEventListener('change', lookAtFofmChange));
@@ -1466,6 +3054,10 @@ function closingMenu() {
 function closingMenuAndAllListField() {
 
 
+
+allSelects.forEach(s=>addEventListener('change', selectRules));
+
+
 [...document.querySelectorAll('.hml')].forEach(link=>{
 
 link.classList.remove('activLink');
@@ -1485,11 +3077,17 @@ searchingForChange.style.opacity = 0;
 
 allItems.classList.add('hiddening');
 
+
+document.getElementsByClassName('newGroupCreateForm')[0].classList.add('hiddening');
+
 searchingForChange.classList.add('hiddening');
+
+  document.getElementsByClassName('groupsChangeDiv')[0].classList.add('hiddening');
 
   formHolder.style.opacity = 1;
 
 formHolder.classList.remove('hiddening');
+
 
 hMenu.classList.remove('opened');
 
@@ -1497,11 +3095,61 @@ hMenu.classList.remove('opened');
 
 
 
+// открытие редактирования групп
+
+
+function closingMenuAndChangeGroup() {
+
+
+  [...document.querySelectorAll('.hml')].forEach(link=>{
+
+link.classList.remove('activLink');
+
+link.classList.add('invsbLink')
+
+});
+
+
+this.classList.add('activLink');
+
+
+searchingForChange.style.opacity = 0;
+
+searchingForChange.classList.add('hiddening');
+
+allItems.style.opacity = 0;
+
+formHolder.style.opacity = 0;
+
+allItems.classList.add('hiddening');
+
+document.getElementsByClassName('newGroupCreateForm')[0].classList.add('hiddening');
+
+formHolder.classList.add('hiddening');
+
+
+document.getElementsByClassName('groupsChangeDiv')[0].classList.remove('hiddening');
+
+  
+
+hMenu.classList.remove('opened');
+
+
+[...document.querySelectorAll('.selectForGroupOrder')].forEach(s=>s.addEventListener('change', changingGroupOrder, false));
+
+
+startGroupsArr = [...document.querySelectorAll('.selectForGroupOrder')].map(s=>{
+
+return [...s.childNodes].filter(o=>o.selected)[0].value;
+
+});
+
+
+}
 
 
 
-
-// открытие поиска для правки
+// открытие поиска для правки имен
 
 
 function closingMenuAndGoSearch() {
@@ -1529,7 +3177,11 @@ formHolder.style.opacity = 0;
 
 allItems.classList.add('hiddening');
 
+document.getElementsByClassName('newGroupCreateForm')[0].classList.add('hiddening');
+
 formHolder.classList.add('hiddening');
+
+document.getElementsByClassName('groupsChangeDiv')[0].classList.add('hiddening');
 
   
 
@@ -1537,6 +3189,76 @@ hMenu.classList.remove('opened');
 
 
 }
+
+
+
+// ---------------------------- ------------------------------- функция открытия формы создания групп ------------------------- -------------------------------
+
+// ••••••••••••••••••••••••••••
+
+
+function openGroupCreatePage() {
+
+   [...document.querySelectorAll('.hml')].forEach(link=>{
+
+link.classList.remove('activLink');
+
+link.classList.add('invsbLink')
+
+});
+
+
+this.classList.add('activLink');
+
+
+
+formHolder.style.opacity = 0;
+
+searchingForChange.style.opacity = 0;
+
+formHolder.classList.add('hiddening');
+
+searchingForChange.classList.add('hiddening');
+
+document.getElementsByClassName('groupsChangeDiv')[0].classList.add('hiddening');
+
+hMenu.classList.remove('opened');
+
+allItems.style.opacity = 0;
+
+allItems.classList.add('hiddening');
+
+
+document.getElementsByClassName('newGroupCreateForm')[0].classList.remove('hiddening');
+
+
+
+// заполняем селект именами
+
+
+groupSelect.innerHTML = loadedArr.map(person=>{
+
+  return `
+
+    <option value='${person.count}'>${person.other} ${person.name} ${person.surname}</option>
+
+  `
+
+}).join('');
+
+
+
+
+}
+
+
+// ----------------------------
+
+// ----------------------------
+
+// ••••••••••••••••••••••••••••
+
+
 
 
 
@@ -1563,7 +3285,11 @@ setTimeout(()=>{
 
 oZdravii.classList.remove('start1');
 
+oZdravii.classList.add('first');
+
 oUpokoenii.classList.remove('start2');
+
+oUpokoenii.classList.add('second');
 
 }, 200);
 
@@ -1575,7 +3301,11 @@ searchingForChange.style.opacity = 0;
 
 formHolder.classList.add('hiddening');
 
+document.getElementsByClassName('newGroupCreateForm')[0].classList.add('hiddening');
+
 searchingForChange.classList.add('hiddening');
+
+document.getElementsByClassName('groupsChangeDiv')[0].classList.add('hiddening');
 
 hMenu.classList.remove('opened');
 
@@ -1584,10 +3314,7 @@ allItems.style.opacity = 1;
 allItems.classList.remove('hiddening');
 
 
- 
-
-
-  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`)
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
 
 .then(data=>data.json())
 
@@ -1596,99 +3323,7 @@ allItems.classList.remove('hiddening');
 
   loadedArr = allNamesArr;
 
-
-  oZdravii.innerHTML = `
-
-     <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h3 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
-
-    </br>
-
-    </br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о здравии')
-
-  .map(data=>{
-
-
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}
-
-  </br></br></br></br>+ + +</br></br></br></br>
-
-</div>
-
-`;
-
-
-  oUpokoenii.innerHTML = `
-
-    <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h3 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
-
-    </br></br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о упокоении')
-
-  .map(data=>{
-
-
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-   <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}</br></br></br></br>+ + +</br></br></br></br></div>
-
-`
+downloadNewDataFromMobi(allNamesArr);
 
 
 })
@@ -1894,6 +3529,8 @@ oUpokoenii.style.filter = 'blur(0px)';
   walk = 0;
 
 }
+
+
 
 
 
@@ -2190,9 +3827,10 @@ setTimeout(()=>{
 
   function myAlert(msg) {
 
-    alertFon.classList.add('showAlert');
+alertFon.classList.add('showAlert');
 
     alertFon.innerHTML = `<div class='msgDiv'>${msg}</div>`;
+
 
   }
 
@@ -2460,11 +4098,15 @@ upSvgHolder.style.opacity = 0;
 // конец плей фции -------------
 
 
+
+
+
 // ---- функция скроллинга вверх--------------
 
   
 
   function scrollToTop() {
+
 
 
    const oZdrPlay = document.getElementsByClassName('showedPersonsList')[0];
@@ -2546,41 +4188,15 @@ myReq = requestAn(scrollSinodikOUpokoenii);
 
 
 
-// ------- режим поминовения. определяет если в центре ---------------
-
-
-function getCenterOfPage() {
-
-[...document.querySelectorAll('.commonBox')].forEach(div=>{
-
-  
-
-  if((div.offsetTop-window.scrollY) < (screen.height/8)){
-
-div.style.opacity = 0; 
-
- } else if((div.offsetTop-window.scrollY) > (screen.height/2)){
-
-div.style.opacity = 0; 
-
- } else {
-
-  div.style.opacity = 1;
-
- }
-
-});
-
-}
-
-
-
 // ----- выход из режима поминовения --------
 
 
 function closePlayMode() {
 
    playModeStart = false;
+
+
+   groupsTitle.innerHTML = '';
 
 
   modePlayPauseBtn.innerHTML = 'пауза';
@@ -2810,6 +4426,9 @@ inputForSearch.addEventListener('keyup', displayMatches);
 btnAdd.addEventListener('click', setDataTest);
 
 
+createGroupBtn.addEventListener('click', newGroupCreate);
+
+
 sandwich.addEventListener('click', openingMenu);
 
 
@@ -2822,7 +4441,13 @@ addListTag.addEventListener('click', closingMenuAndAllListField);
 allListTag.addEventListener('click', closingMenuAndAddingField);
 
 
+addGroupTag.addEventListener('click', openGroupCreatePage);
+
+
 changeListTag.addEventListener('click', closingMenuAndGoSearch);
+
+
+changeGroupTag.addEventListener('click', closingMenuAndChangeGroup);
 
 
 
@@ -2946,6 +4571,13 @@ document.getElementsByClassName("modalWindow")[0].classList.add("modalOut");
 document.getElementsByClassName('loader')[0].addEventListener('touchstart', e=>e.preventDefault());
 
 
+
+groupDel.addEventListener('change', toDeleteGroup, false);
+
+
+groupRename.addEventListener('change', toRenameGroup, false);
+
+
 /* ========================
 
 ======== конец назначение слушателей ==============================
@@ -2963,7 +4595,7 @@ document.getElementsByClassName('loader')[0].addEventListener('touchstart', e=>e
 
 
 
-fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/iereiAleksandrBartov?${myKey}`)
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
 
 .then(data=>data.json())
 
@@ -3011,103 +4643,19 @@ document.getElementsByClassName('loader')[0].style.display = 'none';
   loadedArr = allNamesArr;
 
 
-  oZdravii.innerHTML = `
-
-     <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h3 style='color:#CB3C25'><strong>О ЗДРАВИИ</strong></h4>
-
-    </br>
-
-    </br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о здравии')
-
-  .map(data=>{
+  setTimeout(groupeDefine, 0);
 
 
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}
-
-  </br></br></br></br>+ + +</br></br></br></br>
-
-</div>
-
-`;
-
-
-  oUpokoenii.innerHTML = `
-
-    <svg viewBox='0 0 100 100'>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
-
-               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
-
-             </g>
-
-           </svg>
-
-     </br>
-
-    <h3 style='color:#01142F'><strong>О УПОКОЕНИИ</strong></h4>
-
-    </br></br>
-
-    <div class='showedPersonsList'>${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о упокоении')
-
-  .map(data=>{
-
-
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}</br></br></br></br>+ + +</br></br></br></br></div>
-
-`
+  downloadNewDataFromMobi(allNamesArr);
 
 
 })
 
 .catch(e=>console.log(e));
+
+
+
+
 
 
 
@@ -3304,7 +4852,37 @@ if(day_screen.innerHTML==1){
     }
 
 
-  if(thatIndex === i) input.value = `${day}.${month}.${year_screen.innerHTML}`;
+  if(thatIndex === i) {
+
+input.value = `${day}.${month}.${year_screen.innerHTML}`;
+
+
+let div = document.createElement("div");
+
+div.innerHTML = `
+
+  <svg viewBox='0 0 100 100'>
+
+       <circle cx='50' cy='50' r='20' fill="#CB3C25"/>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="4px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M44,44 L56,56 M44,56 L56,44" />
+
+             </g>
+
+           </svg>
+
+`;
+
+div.classList.add('miniCrossForDate');
+
+div.onclick = delDate;
+
+
+input.parentElement.append(div);
+
+}
 
 
 });
@@ -3314,6 +4892,7 @@ mainDiv.classList.add('hiddening');
 
 
 }
+
 
 
 

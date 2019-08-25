@@ -137,9 +137,13 @@
   
         <span class='allListTag activLink hml invsbLink'>мои синодики</span>
   
-        <span class='addListTag invsbLink hml'>добавить</span>
+        <span class='addListTag invsbLink hml'>добавить имя</span>
   
-         <span class='changeListTag invsbLink hml'>изменить</span>
+        <span class='addGroupTag invsbLink hml'>создать группу</span>
+  
+         <span class='changeListTag invsbLink hml'>изменить/удалить имя</span>
+  
+         <span class='changeGroupTag invsbLink hml'>изменить/удалить группу</span>
   
       </div>
   
@@ -147,6 +151,9 @@
   
   
     <header>
+  
+  
+      <div id='groupsTitle'></div>
   
       <div class='sandwich'><div>|||</div></div>
   
@@ -423,7 +430,7 @@
   
       <option value="уч.">учащаяся</option>
   
-      <option value='непр'>непраздная</option>
+      <option value='непр.'>непраздная</option>
   
     </select>
   
@@ -547,6 +554,20 @@
   
   
   
+     <div class='selectsHolder' id='groups'>
+  
+        <label for='groupsSelect'>Включить в группу:</label>
+  
+       <select id='groupsSelect' class='selectForGroup' multiple>
+  
+      <option value="0"></option>
+  
+    </select>
+  
+     </div>
+  
+  
+  
   <table style='border-collapse: collapse; vertical-align: bottom'>
   
         <tr>
@@ -599,7 +620,7 @@
   
         <td>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder additional dateHolder'>
   
         <label class='fieldHolderLabel' for='dateOfBirth'>Дата рождения:</label>
   
@@ -611,7 +632,7 @@
   
         <td class='tabRight'>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfBapt'>Дата крещения:</label>
   
@@ -627,7 +648,7 @@
   
         <td>
   
-       <div class='fieldHolder additional'>
+       <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfSaint'>Именины:</label>
   
@@ -639,7 +660,7 @@
   
         <td class='tabRight'>
   
-      <div class='fieldHolder additional' id='dateOfDeath'>
+      <div class='fieldHolder dateHolder additional' id='dateOfDeath'>
   
         <label class='fieldHolderLabel' for='dateDeath'>Дата смерти:</label>
   
@@ -655,7 +676,7 @@
   
         <td>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfVows'>Дата пострига:</label>
   
@@ -667,7 +688,7 @@
   
         <td class='tabRight'>
   
-       <div class='fieldHolder additional'>
+       <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfOrdinationDiak'>Диаконская хиротония:</label>
   
@@ -683,7 +704,7 @@
   
         <td colspan='2' class='tabRight'>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfOrdinationPriest'>Иерейская хиротония:</label>
   
@@ -699,7 +720,7 @@
   
         <td colspan='2' class='tabRight'>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfOrdinationBish'>Епископская хиротония:</label>
   
@@ -715,7 +736,7 @@
   
         <td colspan='2' class='tabRight'>
   
-      <div class='fieldHolder additional'>
+      <div class='fieldHolder dateHolder additional'>
   
         <label class='fieldHolderLabel' for='dateOfEnthron'>Интронизация:</label>
   
@@ -838,6 +859,103 @@
       <div class='searchResults'></div>
   
     </div>
+  
+  
+  
+    <div class='newGroupCreateForm hiddening'>
+  
+       <form id='addGroup'>
+  
+          <div class='formTitle'>
+  
+      <h3>Создание новой группы</h3>
+  
+      <h5>( группа определяет порядок поминовения: все члены группы поминаются вместе )</h5>
+  
+     </div>
+  
+      </br>
+  
+      <div>
+  
+        <label for='groupName'>Название:</label>
+  
+        <input id='groupName' name='nameGroup' type='text' placeholder='например: родственники'/>
+  
+      </div>
+  
+      </br>
+  
+      <div>
+  
+        <label for='groupSelect'>Включить в группу:</label>
+  
+        <select id='groupSelect' multiple>
+  
+    </select>
+  
+      </div>
+  
+      </br>
+  
+      <button type='button' class='addBtnDiv' id='createGroupBtn'>
+  
+        создать
+  
+      </button>
+  
+       </form>
+  
+    </div>
+  
+  
+  
+     <div class='groupsChangeDiv hiddening'>
+  
+  
+     <div class='formTitle'>
+  
+      <h3>Редактирование групп</h3>
+  
+     </div>
+  
+  
+    <div class='selectsHolder groupChangeSelects'>
+  
+        <label for='groupDel'>Удалить группу:</label>
+  
+       <select id='groupDel' class='selectForGroup'>
+  
+      <option value="0"></option>
+  
+    </select>
+  
+     </div>
+  
+  
+    <div class='selectsHolder groupChangeSelects'>
+  
+        <label for='groupRename'>Переименовать:</label>
+  
+       <select id='groupRename' class='selectForGroup'>
+  
+      <option value="0"></option>
+  
+    </select>
+  
+     </div>
+  
+  
+    <div>
+  
+      <h4>Порядок показа групп</h4>
+  
+      <div class='listGroupsForOrder'></div>
+  
+    </div>
+  
+    </div>
+  
   
   </main>
   
