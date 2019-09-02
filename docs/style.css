@@ -43,6 +43,239 @@ html {
 }
 
 
+.singInPage > svg:first-child {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 100%;
+
+} 
+
+
+#enterTag {
+
+  padding: 10px;
+
+  color: rgba(255,255,255,1);
+
+  font-weight: 600;
+
+  font-size: 1.4rem;
+
+  position: absolute;
+
+  // left: 0;
+
+  top: 20%;
+
+  transform: translateY(-50%);
+
+  width: 50%;
+
+  text-align: center;
+
+  // border-radius: 0 5px 0 0;
+
+  border-top: 1px solid #BDC6BC;
+
+  border-right: 1px solid #BDC6BC;
+
+} 
+
+
+
+#regTag {
+
+  padding: 10px;
+
+  color: rgba(255,255,255,.2);
+
+  font-weight: 600;
+
+  font-size: 1.4rem;
+
+  //filter: blur(1px);
+
+  position: absolute;
+
+  right: 0;
+
+  top: 20%;
+
+  transform: translateY(-50%);
+
+  width: 50%;
+
+  text-align: center;
+
+  //border-radius: 0 0 0 5px;
+
+  border-bottom: 1px solid #BDC6BC;
+
+} 
+
+
+
+.singInPage > input {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 70%;
+
+  transform: translate(-50%, -50%);
+
+  width: 70%;
+
+  background: transparent;
+
+  border: none;
+
+  //border-bottom: 1px solid #ffffff;
+
+  font-size: 1.2rem;
+
+  padding: 5px 0;
+
+  margin: 10px;
+
+} 
+
+
+#emailInputReg {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 55%;
+
+  transform: translate(-50%, -50%);
+
+  width: 70%;
+
+  background: transparent;
+
+  border: none;
+
+  //border-bottom: 1px solid #ffffff;
+
+  font-size: 1.2rem;
+
+  padding: 5px 0;
+
+  margin: 10px;
+
+} 
+
+
+
+.lineDivider {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 55%;
+
+  transform: translate(-50%, -50%);
+
+  width: 76%;
+
+  z-index: -1;
+
+  }
+
+
+.lastDivider {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 40%;
+
+  transform: translate(-50%, -50%);
+
+  width: 76%;
+
+  z-index: -1;
+
+  }
+
+
+.singInPage > button {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 85%;
+
+  transform: translate(-50%, -50%);
+
+  width: 70%;
+
+  margin: 20px 0 80px 0;
+
+  padding: 12px 10px;
+
+  font-size: 1.2rem;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  outline: none;
+
+  color: var(--mainBg);
+
+  background-color: #BDC6BC;
+
+  border: 1px solid #BDC6BC;
+
+  border-radius: 3px;
+
+} 
+
+
+#delSearchCross {
+
+  position: absolute;
+
+  // background: green;
+
+  width: 50px;
+
+  height: 50px;
+
+  right: -6.0px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  transition: transform 1.4s  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+} 
+
+
+#delSearchCross > svg {
+
+  width: 100%;
+
+} 
+
+
 
 #calHolder {
 
@@ -662,6 +895,7 @@ html {
   width: 70vw;
 
 }
+
 
 
 #loaderCircle {

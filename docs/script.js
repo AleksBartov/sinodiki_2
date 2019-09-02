@@ -65,7 +65,7 @@
 
 
 
-//localStorage.clear();
+// localStorage.clear();
 
 
 //alert(document.querySelectorAll('.loader svg path')[1].getTotalLength());
@@ -84,17 +84,24 @@
 const myKey = 'apiKey=sKw_oqVSmdk0cj8XolfkSyap__JKRPLt';
 
 
-const myCollection = 'iereiAleksandrBartov';
+let myCollection = 'iereiAleksandrBartov';
+
+
+let enter = false;
+
+let reg = false;
 
 
 /*  iereiAleksandrBartov  */
 
 
-let speed = 18;  /* чем меньше число, тем выше скорость */
+let speed = 19;  /* чем меньше число, тем выше скорость */
 
 
 
 const endings = [
+
+  ['мин', 'мина'],
 
   ['сий', 'сия'],
 
@@ -241,6 +248,7 @@ let editMode = false;
 
 let groupsArr = new Set();
 
+
 let groupToDel;
 
 
@@ -255,6 +263,9 @@ const btnAdd = document.getElementsByClassName('addBtnDiv')[0];
 
 
 const formInputs = document.getElementsByTagName('input');
+
+
+const main = document.getElementsByTagName('main')[0];
 
 
 const allLabels = [...document.getElementsByTagName('label')];
@@ -332,6 +343,12 @@ let myReq;
    const cancelReq = window.cancelAnimationFrame;
 
 
+  let getStartet = true;
+
+
+  let user;
+
+
   let startGroupsArr;
 
 
@@ -339,9 +356,13 @@ if(!localStorage.getItem('myOrder')) {
 
   startGroupsArr = '';
 
+  // alert('there is not any data in localStore!');
+
 } else {
 
   startGroupsArr = localStorage.getItem('myOrder').split(',');
+
+  // alert(startGroupsArr);
 
 }
 
@@ -351,6 +372,191 @@ if(!localStorage.getItem('myOrder')) {
 /* -----------------------------------
 
 ---- Конец обьявления переменных ---------------------------------- */
+
+
+
+
+/* тут начинается работа work begins here */
+
+
+/* ---------------------------при загрузке страницы первым делов запрашиваем данные ----------------------------- */
+
+
+if(!localStorage.getItem('registeredInMySinodiki')) {
+
+
+oZdravii.classList.add('hiddening');
+
+oUpokoenii.classList.add('hiddening');
+
+
+sandwich.classList.add('hiddening');
+
+
+allItems.classList.add('hiddening');
+
+
+setTimeout(()=>{
+
+document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+}, 2200);
+
+
+setTimeout(()=>{
+
+document.getElementsByClassName('loader')[0].style.display = 'none';
+
+
+  let div = document.createElement("div");
+
+div.innerHTML = `
+
+  <svg viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="rgba(255,255,255,.04)" stroke-width="1px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M49.75,90.5 A 40.5 40.5 0 1 1 50 90.5" />
+
+               <path d="M48,20 V25 H43 M43,29 H48 V34 H26 M26,38 H48 V63 L43,60 M43,65 L48,68 V86 A 36 36 0 1 1 52 86 V69.5 L57,72.5 M57,67.5 L52,64.5 V38 H74 M74,34 H52 V29 H57 M57,25 H52 V20" />
+
+             </g>
+
+           </svg>
+
+   <span id='enterTag' onclick='showLogFields()'>вход</span>
+
+   <span id='regTag' onclick='showRegFields()'>регистрация</span>
+
+   <input type='password' id='passInputLog' placeholder='введите пароль' />
+
+    <svg class='lineDivider' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width=".41px" stroke-linejoin="round">
+
+               <path d="M5,95 H95" />
+
+             </g>
+
+           </svg>
+
+   <button onclick='checkPassAndEnter()' id='logBtn'>войти</button>
+
+
+<input type='email' id='emailInputReg' class='hiddening' placeholder='ваш email' />
+
+    <svg class='lineDivider hiddening' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width=".41px" stroke-linejoin="round">
+
+               <path d="M5,95 H95" />
+
+             </g>
+
+           </svg>
+
+<input type='password' id='passInputReg' class='hiddening' placeholder='придумайте пароль' />
+
+   <svg class='lineDivider lastDivider hiddening' viewBox='0 0 100 100'>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width=".41px" stroke-linejoin="round">
+
+               <path d="M5,95 H95" />
+
+             </g>
+
+           </svg>
+
+   <button onclick='newUserReg()' class='hiddening' id='regBtn'>зарегистрироваться</button>
+
+`;
+
+div.classList.add('singInPage');
+
+
+ main.append(div);
+
+
+}, 3000);
+
+
+
+  
+
+} else {
+
+
+// берем почту и пароль из локала, если и enter = true
+
+
+myCollection = `${localStorage.getItem('myMail')}${localStorage.getItem('myPass')}`;
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+  const step = Date.now();
+
+  if(step-start>4000){
+
+document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+
+  setTimeout(()=>{
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+document.getElementsByClassName('loader')[0].style.display = 'none';
+
+}, 700);
+
+}else{
+
+  setTimeout(()=>{
+
+    document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+
+  setTimeout(()=>{
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+document.getElementsByClassName('loader')[0].style.display = 'none';
+
+}, 700);
+
+  }, 2500);
+
+}
+
+
+  loadedArr = allNamesArr;
+
+
+  groupeDefine();
+
+
+  /*
+
+setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
+
+  */
+
+
+})
+
+.catch(e=>console.log(e));
+
+
+}
+
 
 
 
@@ -365,12 +571,483 @@ if(!localStorage.getItem('myOrder')) {
 @@@@@@ */
 
 
+// new user registration f •••• •••••••••••••••••••••••••••••••
+
+
+function newUserReg() {
+
+
+  myAlert(`идет проверка данных
+
+ и регистрация!`);
+
+
+  const myPass = passInputReg.value;
+
+  const myMail = emailInputReg.value;
+
+
+  if(!myPass || !myMail) {
+
+    document.getElementsByClassName('msgDiv')[0].innerHTML = `Пожалуста, введите email и пароль!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  return;
+
+  }
+
+
+  let newData = JSON.stringify({
+
+    myMail,
+
+    myPass,
+
+    enter: true
+
+  });
+
+
+  const options = { 
+
+  method: 'POST',
+
+  headers: {
+
+'Content-Type': 'application/json'
+
+  },
+
+  body: newData
+
+};
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/users?${myKey}`, options)
+
+.then(data=>data.json())
+
+.then(user=>{
+
+localStorage.clear();
+
+JSON.stringify(localStorage.setItem('myMail', user.myMail));
+
+JSON.stringify(localStorage.setItem('myPass', user.myPass));
+
+JSON.stringify(localStorage.setItem('enter', user.enter));
+
+JSON.stringify(localStorage.setItem('registeredInMySinodiki', 'true'));
+
+
+myCollection = `${user.myMail}${user.myPass}`; 
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+document.getElementsByClassName('msgDiv')[0].innerHTML = `Регистрация завершена!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+  document.getElementsByClassName('singInPage')[0].classList.add('hiddening');
+
+
+oZdravii.classList.remove('hiddening');
+
+oUpokoenii.classList.remove('hiddening');
+
+
+sandwich.classList.remove('hiddening');
+
+
+allItems.classList.remove('hiddening');
+
+  
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+
+  loadedArr = allNamesArr;
+
+
+  groupeDefine();
+
+})
+
+.catch(e=>console.log(e));
+
+
+})
+
+.catch(err=>console.log(`что-то не так при сохранении нового юзера! ${err}`));
+
+}
+
+
+// end newUserRegistration •£££••••~~~~~*******>%%########%%
+
+
+
+
+
+
+// tag's change functions •••••  •••••••••••••••••••••••••••••••
+
+
+function showLogFields() {
+
+  enterTag.style.color = 'rgba(255,255,255,1)';
+
+  enterTag.style.borderBottom = 'none';
+
+  enterTag.style.borderTop = '1px solid #BDC6BC';
+
+
+  regTag.style.color = 'rgba(255,255,255,.2)';
+
+  regTag.style.borderTop = 'none';
+
+  regTag.style.borderBottom = '1px solid #BDC6BC';
+
+
+  logBtn.classList.remove('hiddening');
+
+passInputLog.classList.remove('hiddening');
+
+document.getElementsByClassName('lineDivider')[0].classList.remove('hiddening');
+
+
+regBtn.classList.add('hiddening');
+
+passInputReg.classList.add('hiddening');
+
+emailInputReg.classList.add('hiddening');
+
+document.getElementsByClassName('lineDivider')[1].classList.add('hiddening');
+
+document.getElementsByClassName('lineDivider')[2].classList.add('hiddening');
+
+
+}
+
+
+// -----------------------------
+
+
+
+function showRegFields() {
+
+  regTag.style.color = 'rgba(255,255,255,1)';
+
+  regTag.style.borderBottom = 'none';
+
+  regTag.style.borderTop = '1px solid #BDC6BC';
+
+
+  enterTag.style.color = 'rgba(255,255,255,.2)';
+
+  enterTag.style.borderTop = 'none';
+
+  enterTag.style.borderBottom = '1px solid #BDC6BC';
+
+
+  logBtn.classList.add('hiddening');
+
+passInputLog.classList.add('hiddening');
+
+document.getElementsByClassName('lineDivider')[0].classList.add('hiddening');
+
+
+regBtn.classList.remove('hiddening');
+
+passInputReg.classList.remove('hiddening');
+
+emailInputReg.classList.remove('hiddening');
+
+document.getElementsByClassName('lineDivider')[1].classList.remove('hiddening');
+
+document.getElementsByClassName('lineDivider')[2].classList.remove('hiddening');
+
+  
+
+}
+
+
+// tag's change functions end •••••  •••••••••••••••••••••••••••••••
+
+
+
+
+function checkPassAndEnter() {
+
+
+  myAlert('загрузка...');
+
+ 
+
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/users?${myKey}`)
+
+.then(data=>data.json())
+
+.then(users=>{
+
+    user = users.filter(user=>user.myPass===passInputLog.value)[0];
+
+
+    if(!user) {
+
+
+document.getElementsByClassName('msgDiv')[0].innerHTML = `некорректный пароль!
+
+попробуйте еще раз!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+
+      // alert('данные неверны!');
+
+
+    } else {
+
+      
+
+      myCollection = `${user.myMail}${user.myPass}`;
+
+
+fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+document.getElementsByClassName('msgDiv')[0].innerHTML = `загрузка завершена!`;
+
+setTimeout(()=>{
+
+alertFon.classList.remove('showAlert');
+
+  }, 2000);
+
+
+localStorage.clear();
+
+JSON.stringify(localStorage.setItem('myMail', user.myMail));
+
+JSON.stringify(localStorage.setItem('myPass', user.myPass));
+
+JSON.stringify(localStorage.setItem('enter', user.enter));
+
+JSON.stringify(localStorage.setItem('registeredInMySinodiki', 'true'));
+
+
+document.getElementsByClassName('singInPage')[0].classList.add('hiddening');
+
+
+oZdravii.classList.remove('hiddening');
+
+oUpokoenii.classList.remove('hiddening');
+
+
+sandwich.classList.remove('hiddening');
+
+
+allItems.classList.remove('hiddening');
+
+  
+
+oZdravii.classList.remove('start1');
+
+oUpokoenii.classList.remove('start2');
+
+
+  loadedArr = allNamesArr;
+
+
+  groupeDefine();
+
+
+  /*
+
+setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
+
+  */
+
+
+})
+
+.catch(e=>console.log(e));
+
+    }
+
+})
+
+.catch(err=>console.log(`что-то не так при попытке найти пароль среди юзеров! ${err}`));
+
+}
+
+
+
+
+function deleteSearchInpt() {
+
+  this.classList.add('invsbLink');
+
+inputForSearch.value = '';
+
+searchResults.innerHTML = '';
+
+}
+
+
+
+// функция преобразования запятой в названии группы•••••
+
+
+
+function commaChange(title) {
+
+  if([...title].includes(',')) {
+
+     const titleWithoutComma = [...title].map(l=>{
+
+       if(l===',') {
+
+         return l = '@';
+
+       }
+
+       return l;
+
+     }).join('');
+
+     return titleWithoutComma;
+
+  }
+
+     return title;
+
+}
+
+
+
+//console.log(commaChange('крестные, крестники, дети и все'));
+
+
+
+
+// конец функции преобразования запятой•••••••••••••••••
+
+
+
+
+
+// ---- функция скроллинга вверх--------------
+
+  
+
+  function scrollToTop() {
+
+
+
+   const oZdrPlay = document.getElementsByClassName('showedPersonsList')[0];
+
+
+   const oUpkPlay = document.getElementsByClassName('showedPersonsList')[1];
+
+
+  
+
+   let startPlay = Date.now();
+
+   let startPosition = window.scrollY;
+
+
+   if(oZdraviiClicked) {
+
+   let counter = 0;
+
+   function scrollSinodikOZdravii(){
+
+
+   counter = ((Date.now()-startPlay)/speed)+startPosition;
+
+    window.scrollTo({top: counter, behavior: 'smooth'});
+
+
+   lastCounterState = counter;
+
+ 
+
+if(counter<oZdrPlay.clientHeight)
+
+     myReq = requestAn(scrollSinodikOZdravii);
+
+     }
+
+myReq = requestAn(scrollSinodikOZdravii);
+
+
+    } else {
+
+
+      let counter = 0;
+
+   function scrollSinodikOUpokoenii(){
+
+    counter = ((Date.now()-startPlay)/speed)+startPosition;
+
+    window.scrollTo({top: counter, behavior: 'smooth'});
+
+
+  lastCounterState = counter;
+
+    
+
+if(counter<oUpkPlay.clientHeight)
+
+myReq = requestAn(scrollSinodikOUpokoenii);
+
+     }
+
+myReq = requestAn(scrollSinodikOUpokoenii);
+
+    }
+
+  }
+
+
+
+
+
+
+
 // """"" изменение порядка показа групп """"""
 
 
 function changingGroupOrder() {
 
-  
+
 
   const indexOfChoosenSel = [...document.querySelectorAll('.selectForGroupOrder')].indexOf(this);
 
@@ -399,6 +1076,9 @@ return [...s.childNodes].filter(o=>o.selected)[0].value;
 
 
   JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
+
+downloadNewDataFromMobi(loadedArr);
 
 
 }, 0);
@@ -529,7 +1209,10 @@ let actualArr = startGroupsArr || [...groupsArr];
 
     .map(g=>{
 
-      groupsOrder.push(g);
+
+      if(allNamesArr
+
+  .filter(data=>data.live == 'о здравии' && data.group!==undefined && data.group.includes(g) && ![...checker].includes(data.count)).length<1) return;
 
       
 
@@ -542,6 +1225,8 @@ let actualArr = startGroupsArr || [...groupsArr];
           ${allNamesArr
 
   .filter(data=>data.live == 'о здравии' && data.group!==undefined && data.group.includes(g) && ![...checker].includes(data.count))
+
+  .sort((a,b)=>a.surname>b.surname)
 
   .map(data=>{
 
@@ -575,7 +1260,7 @@ let actualArr = startGroupsArr || [...groupsArr];
 
   .sort()
 
-  .filter(data=>data.live == 'о здравии' && data.group===undefined)
+  .filter(data=>data.live == 'о здравии' && ![...checker].includes(data.count))
 
   .map(data=>{
 
@@ -591,7 +1276,7 @@ let actualArr = startGroupsArr || [...groupsArr];
 
 }).join('</br>')}
 
-  </br></br></br></br>+ + +</br></br></br></br>
+  </br></br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
 
     
 
@@ -644,6 +1329,12 @@ let actualArr = startGroupsArr || [...groupsArr];
 
     .map(g=>{
 
+
+      if(allNamesArr
+
+  .filter(data=>data.live == 'о упокоении' && data.group!==undefined && data.group.includes(g) && ![...checker].includes(data.count)).length<1) return;
+
+
       return `
 
         <span class='groupLine oU'>${g}</span>
@@ -688,7 +1379,7 @@ let actualArr = startGroupsArr || [...groupsArr];
 
   .sort()
 
-  .filter(data=>data.live == 'о упокоении' && data.group===undefined)
+  .filter(data=>data.live == 'о упокоении' && ![...checker].includes(data.count))
 
   .map(data=>{
 
@@ -704,13 +1395,17 @@ let actualArr = startGroupsArr || [...groupsArr];
 
 }).join('</br>')}
 
-  </br></br></br></br>+ + +</br></br></br></br>
+  </br></br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
 
 </div>
 
 `;
 
 }, 0);
+
+
+// localStorage.clear();
+
 
 }
 
@@ -762,8 +1457,6 @@ renameGroupOkBtn.addEventListener('click', okGroupRename);
    renamedGroup =  [...document.getElementsByClassName('msgDiv')[0].childNodes].filter(n=>n.nodeName==='INPUT').map(n=>n.value);
 
 
-   //alert(`${groupToRename}, ${renamedGroup}`);
-
     document.getElementsByClassName('msgDiv')[0].innerHTML = `сохраняем изменения`;
 
   // ------
@@ -786,11 +1479,11 @@ renameGroupOkBtn.addEventListener('click', okGroupRename);
 
    group = group.filter(g=>g!==groupToRename);
 
-   //console.log(newGroup);
 
    group.push(renamedGroup[0]);
 
-   //console.log(newGroup);
+
+   JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
 
 
 
@@ -881,12 +1574,28 @@ renameGroupOkBtn.addEventListener('click', okGroupRename);
 
 .then(allNamesArr=>{
 
+
+   startGroupsArr = startGroupsArr.filter(g=>g!==groupToRename);
+
+
+  console.log(startGroupsArr);
+
+
+startGroupsArr.push(renamedGroup[0]);
+
+  
+
+  console.log(startGroupsArr);
+
+
+
+  JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
   
 
   loadedArr = allNamesArr;
 
-
-  setTimeout(groupeDefine, 0);
+  groupeDefine();
 
 
   setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
@@ -1053,11 +1762,10 @@ function okGroupDel(){
 
 })
 
-.catch(err=>console.log(err));
+.catch(err=>console.log(`что-то не так! ${err}`));
 
 
   });
-
 
 
 
@@ -1071,8 +1779,33 @@ function okGroupDel(){
 
 .then(allNamesArr=>{
 
+
+  startGroupsArr = startGroupsArr.filter(g=>g!==groupToDel);
+
+
+  console.log(`обновленный список групп: ${startGroupsArr}`);
+
+
+  JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
   loadedArr = allNamesArr;
 
+  groupsArr.clear();
+
+
+  loadedArr.filter(p=>p.group)
+
+           .map(p=>p.group)
+
+           .forEach(arr=>{
+
+    for ( const g of arr ) {
+
+      groupsArr.add(g);
+
+    }
+
+  });
 
   setTimeout(groupeDefine, 0);
 
@@ -1081,6 +1814,7 @@ function okGroupDel(){
 
 
   document.getElementsByClassName('msgDiv')[0].innerHTML = `Группа ${groupToDel} удалена!`;
+
 
 setTimeout(()=>{
 
@@ -1091,7 +1825,7 @@ alertFon.classList.remove('showAlert');
 
 })
 
-.catch(e=>console.log(e));
+.catch(e=>console.log(`что-то не так! ${e}`));
 
   }, 0);
 
@@ -1117,8 +1851,17 @@ function groupeDefine(){
 
   let counter = 0;
 
+  
 
-  loadedArr.filter(p=>p.group)
+  fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
+
+.then(data=>data.json())
+
+.then(allNamesArr=>{
+
+
+
+  allNamesArr.filter(p=>p.group)
 
            .map(p=>p.group)
 
@@ -1133,12 +1876,12 @@ function groupeDefine(){
   });
 
 
-  //alert([...groupsArr]);
+   if(startGroupsArr==='') startGroupsArr = [...groupsArr];
 
 
     groupsSelect.innerHTML = 
 
-    [...groupsArr].map(g=>{
+    startGroupsArr.map(g=>{
 
       return `
 
@@ -1153,7 +1896,7 @@ function groupeDefine(){
 
     <option value='0'></option>
 
-    ${[...groupsArr].map(g=>{
+    ${startGroupsArr.map(g=>{
 
       return `
 
@@ -1168,7 +1911,7 @@ function groupeDefine(){
 
     <option value='0'></option>
 
-    ${[...groupsArr].map(g=>{
+    ${startGroupsArr.map(g=>{
 
       return `
 
@@ -1177,6 +1920,63 @@ function groupeDefine(){
     }).join('')}
 
     `;
+
+
+   if(getStartet) {
+
+      downloadNewDataFromMobi(loadedArr);
+
+     getStartet = false;
+
+   }
+
+
+   if(startGroupsArr!==''){
+
+
+      setTimeout(()=>{
+
+document.getElementsByClassName('listGroupsForOrder')[0].innerHTML = startGroupsArr.map(gr=>{
+
+      counter++;
+
+
+      return `
+
+         <div class='selectsHolder groupChangeSelects'>
+
+      <label><strong>${counter}</strong></label>
+
+     <select class='selectForGroupOrder'>
+
+     ${startGroupsArr.map(g=>{
+
+     if(startGroupsArr[counter-1]===g){
+
+            return `
+
+        <option value='${g==undefined ? 0 : g}' selected>${g==undefined ? '' : g}</option>`
+
+      }else{return `
+
+        <option value='${g==undefined ? 0 : g}'>${g==undefined ? '' : g}</option>`}
+
+    }).join('')}
+
+  </select>
+
+   </div>`;
+
+    }).join('');
+
+
+  [...document.querySelectorAll('.selectForGroupOrder')].forEach(s=>s.addEventListener('change', changingGroupOrder, false));
+
+
+  }, 0);
+
+
+   }else{
 
 
     setTimeout(()=>{
@@ -1196,7 +1996,7 @@ document.getElementsByClassName('listGroupsForOrder')[0].innerHTML = [...groupsA
 
      ${[...groupsArr].map(g=>{
 
-     if(groupsOrder[counter-1]===g){
+     if([...groupsArr][counter-1]===g){
 
             return `
 
@@ -1217,6 +2017,11 @@ document.getElementsByClassName('listGroupsForOrder')[0].innerHTML = [...groupsA
 
   }, 0);
 
+  }
+
+})
+
+.catch(err=>console.log(`something wrong: ${err}`));
 
   }
 
@@ -1419,7 +2224,7 @@ alertFon.classList.remove('showAlert');
 
   }, 2000);
 
-  } else if([...groupsArr].includes(groupName.value)) {
+  } else if(startGroupsArr.includes(groupName.value)) {
 
     myAlert(`группа ${groupName.value} уже существует. введите другое название!`);
 
@@ -1440,6 +2245,26 @@ alertFon.classList.remove('showAlert');
 });
 
    setTimeout(editForGroup(selectedPersons, groupName.value), 0);
+
+
+  if(startGroupsArr!==''){
+
+startGroupsArr.push(groupName.value);
+
+  console.log(startGroupsArr);
+
+JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
+  }else{
+
+   startGroupsArr = [groupName.value];
+
+  console.log(startGroupsArr);
+
+JSON.stringify(localStorage.setItem('myOrder', startGroupsArr));
+
+  }
+
 
   }
 
@@ -1567,6 +2392,9 @@ function editForGroup(arr, grTitle){
   loadedArr = allNamesArr;
 
   groupeDefine();
+
+  downloadNewDataFromMobi(allNamesArr);
+
 
 [...groupSelect].forEach(o=>o.selected=false);
 
@@ -2116,7 +2944,14 @@ fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?
 
   loadedArr = allNamesArr;
 
-  document.getElementsByClassName('inputForSearch')[0].value = '';
+  
+
+
+/*
+
+document.getElementsByClassName('inputForSearch')[0].value = '';
+
+*/
 
   document.getElementsByClassName('searchResults')[0].innerHTML = '';
 
@@ -2441,6 +3276,8 @@ function searching(wordToMatch, arr){
 
 function displayMatches() {
 
+  if(this.value.length>1){delSearchCross.classList.remove('invsbLink')}else{delSearchCross.classList.add('invsbLink')}
+
   const arrMatches = searching(this.value, loadedArr);
 
   const html = arrMatches.map(person=>{
@@ -2727,6 +3564,8 @@ document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
 
 [...allRadio].forEach(r=>{
 
+  //r.checked = false;
+
   if(r.value === live) r.checked = true;
 
   if(r.value === sex) r.checked = true;
@@ -2764,7 +3603,11 @@ group == undefined ? console.log('that is old style') : group.forEach(g=>{
 // заполнили инпуты
 
 
-[...document.querySelectorAll("input")].forEach(i=>{
+[...document.querySelectorAll("input")]
+
+   .filter(i=>i.type!=='radio')
+
+   .forEach(i=>{
 
     const matchName = i.name;
 
@@ -3136,13 +3979,6 @@ hMenu.classList.remove('opened');
 
 
 [...document.querySelectorAll('.selectForGroupOrder')].forEach(s=>s.addEventListener('change', changingGroupOrder, false));
-
-
-startGroupsArr = [...document.querySelectorAll('.selectForGroupOrder')].map(s=>{
-
-return [...s.childNodes].filter(o=>o.selected)[0].value;
-
-});
 
 
 }
@@ -4100,94 +4936,6 @@ upSvgHolder.style.opacity = 0;
 
 
 
-
-// ---- функция скроллинга вверх--------------
-
-  
-
-  function scrollToTop() {
-
-
-
-   const oZdrPlay = document.getElementsByClassName('showedPersonsList')[0];
-
-
-   const oUpkPlay = document.getElementsByClassName('showedPersonsList')[1];
-
-
-   // первым делом нужно понять использовать свежий ( freshCounter ) или последний ( lastCounterState )
-
-
-  // по умолчанию используем фрэш
-
-  // но если нажата кнопка паузы (pausePressed), то пользуем ласт
-
-
-   let startPlay = Date.now();
-
-   let startPosition = window.scrollY;
-
-
-   if(oZdraviiClicked) {
-
-   let counter = 0;
-
-   function scrollSinodikOZdravii(){
-
-
-   counter = ((Date.now()-startPlay)/speed)+startPosition;
-
-    window.scrollTo({top: counter, behavior: 'smooth'});
-
-
-   lastCounterState = counter;
-
- 
-
-if(counter<oZdrPlay.clientHeight)
-
-     myReq = requestAn(scrollSinodikOZdravii);
-
-     }
-
-myReq = requestAn(scrollSinodikOZdravii);
-
-
-//cancelReq(myReq);
-
-
-    } else {
-
-
-      let counter = 0;
-
-   function scrollSinodikOUpokoenii(){
-
-    counter = ((Date.now()-startPlay)/speed)+startPosition;
-
-    window.scrollTo({top: counter, behavior: 'smooth'});
-
-
-  lastCounterState = counter;
-
-    
-
-if(counter<oUpkPlay.clientHeight)
-
-myReq = requestAn(scrollSinodikOUpokoenii);
-
-     }
-
-myReq = requestAn(scrollSinodikOUpokoenii);
-
-//cancelReq(myReq);
-
-    }
-
-  }
-
-
-
 // ----- выход из режима поминовения --------
 
 
@@ -4578,82 +5326,14 @@ groupDel.addEventListener('change', toDeleteGroup, false);
 groupRename.addEventListener('change', toRenameGroup, false);
 
 
+delSearchCross.addEventListener('click', deleteSearchInpt, false);
+
+
 /* ========================
 
 ======== конец назначение слушателей ==============================
 
 ==== */
-
-
-
-/* тут начинается работа work begins here */
-
-
-
-/* ---------------------------при загрузке страницы первым делов запрашиваем данные ----------------------------- */
-
-
-
-
-fetch(`https://api.mlab.com/api/1/databases/sinodik/collections/${myCollection}?${myKey}`)
-
-.then(data=>data.json())
-
-.then(allNamesArr=>{
-
-  const step = Date.now();
-
-  if(step-start>4000){
-
-document.getElementsByClassName('loader')[0].classList.add('loaderGone');
-
-
-  setTimeout(()=>{
-
-oZdravii.classList.remove('start1');
-
-oUpokoenii.classList.remove('start2');
-
-document.getElementsByClassName('loader')[0].style.display = 'none';
-
-}, 700);
-
-}else{
-
-  setTimeout(()=>{
-
-    document.getElementsByClassName('loader')[0].classList.add('loaderGone');
-
-
-  setTimeout(()=>{
-
-oZdravii.classList.remove('start1');
-
-oUpokoenii.classList.remove('start2');
-
-document.getElementsByClassName('loader')[0].style.display = 'none';
-
-}, 700);
-
-  }, 2500);
-
-}
-
-
-  loadedArr = allNamesArr;
-
-
-  setTimeout(groupeDefine, 0);
-
-
-  downloadNewDataFromMobi(allNamesArr);
-
-
-})
-
-.catch(e=>console.log(e));
-
-
 
 
 
