@@ -43,6 +43,32 @@ html {
 }
 
 
+.yellowLabel {
+
+  transform: translateY(50%);
+
+  opacity: 0;
+
+  animation: showLabel forwards 1s;
+
+}
+
+
+@keyframes showLabel {
+
+  
+
+  to {
+
+    transform: translateY(0%);
+
+    opacity: 1;
+
+  }
+
+}
+
+
 .singInPage > svg:first-child {
 
   position: absolute;
@@ -1321,10 +1347,19 @@ header {
 
   padding-left: 3px;
 
+  padding-top: 10px;
+
   background: transparent;
 
 }
 
+
+
+.fieldHolder > textarea {
+
+  padding-top: 13px;
+
+}
 
 
 .fieldHolder > input:focus, .fieldHolder > textarea:focus {
@@ -2144,7 +2179,7 @@ td {
 
 .fontSizePlus {
 
-  font-size: 1.9rem;
+  font-size: 2rem;
 
   font-weight: 600;
 
@@ -2153,7 +2188,7 @@ td {
 
 .commonBox_other {
 
-  font-size: .7rem;
+  font-size: 1rem;
 
   margin-top: -3px;
 
@@ -2371,6 +2406,7 @@ td {
 
 
 }
+
 
 
 @keyframes line-width {

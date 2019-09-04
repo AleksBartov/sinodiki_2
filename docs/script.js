@@ -64,7 +64,6 @@
 */
 
 
-
 // localStorage.clear();
 
 
@@ -95,7 +94,7 @@ let reg = false;
 /*  iereiAleksandrBartov  */
 
 
-let speed = 19;  /* чем меньше число, тем выше скорость */
+let speed = 20;  /* чем меньше число, тем выше скорость */
 
 
 
@@ -299,6 +298,9 @@ const changeListTag = document.getElementsByClassName('changeListTag')[0];
 
 
 const changeGroupTag = document.getElementsByClassName('changeGroupTag')[0];
+
+
+const exitTag = document.getElementsByClassName('exitTag')[0];
 
 
 const formHolder = document.getElementsByClassName('formHolder')[0];
@@ -569,6 +571,451 @@ setTimeout(downloadNewDataFromMobi(allNamesArr), 0);
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 @@@@@@ */
+
+
+  function showYellowLabel(e) {
+
+    if(e.target.value!=='' && e.target.value.length===1) {
+
+      //alert(e.target.value);
+
+      let span = document.createElement('span');
+
+   span.classList.add('yellowLabel');
+
+   span.innerHTML = e.target.placeholder;
+
+  span.style.color = '#EDB021';
+
+  span.style.fontSize = '.7rem';
+
+  span.style.position = 'absolute';
+
+  span.style.top = '.5px';
+
+  span.style.left = '5px';
+
+       //alert(this.outerHTML);
+
+e.target.parentNode.prepend(span);
+
+    } else if(e.target.value.length===0){
+
+      [...e.target.parentNode.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
+
+    }
+
+  }
+
+
+
+
+ function checkLabel() {
+
+  [...document.querySelectorAll("input")]
+
+   .filter(i=>i.type!=='radio')
+
+   .forEach(i=>{
+
+     if(i.value!=='') {
+
+   // alert('hi!');
+
+   let span = document.createElement('span');
+
+   span.classList.add('yellowLabel');
+
+   span.innerHTML = i.placeholder;
+
+  span.style.color = '#EDB021';
+
+  span.style.fontSize = '.7rem';
+
+  span.style.position = 'absolute';
+
+  span.style.top = '.5px';
+
+  span.style.left = '5px';
+
+       
+
+i.parentNode.prepend(span);
+
+     }
+
+   });
+
+
+  [...document.querySelectorAll("textarea")]
+
+   .forEach(i=>{
+
+     if(i.value!=='') {
+
+   // alert('hi!');
+
+   let span = document.createElement('span');
+
+   span.classList.add('yellowLabel');
+
+   span.innerHTML = i.placeholder;
+
+  span.style.color = '#EDB021';
+
+  span.style.fontSize = '.7rem';
+
+  span.style.position = 'absolute';
+
+  span.style.top = '.5px';
+
+  span.style.left = '5px';
+
+      
+
+i.parentNode.prepend(span);
+
+     }
+
+   });
+
+}
+
+
+
+
+
+//---функция открытия формы редактирования---------
+
+
+
+function showEditform() {
+
+
+
+[...document.querySelectorAll("input")]
+
+.filter(i=>i.type!=='radio')
+
+.forEach(i=>addEventListener('keyup', showYellowLabel));
+
+
+
+[...document.querySelectorAll("textarea")].forEach(i=>addEventListener('keyup', showYellowLabel));
+
+
+allSelects.filter(d=>d.id!=='groupsSelect').forEach(s=>addEventListener('change', selectRules));
+
+
+editMode = true;
+
+
+[...document.querySelectorAll('.searchedItem')].forEach(d=>d.removeEventListener('click', showEditform, false));
+
+
+window.scrollTo({top: 0, behavior: 'smooth'});
+
+
+// пробую заполнить имеющийся шаблон
+
+searchingForChange.classList.add('hiddening');
+
+formHolder.style.opacity = 1;
+
+formHolder.classList.remove('hiddening');
+
+
+document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
+
+        .filter(p=>p.count==this.id).map(p=>{
+
+   countSearched = p.count;
+
+   IDtoEdit = p._id.$oid;
+
+   
+
+
+   return `
+
+    <div id='deleteName'>удалить запись</div>
+
+    <div id='editCancel'>отменить редактирование</div>
+
+    <h3>${p.other} ${p.name} ${p.surname}</h3>
+
+    <h5>( режим редактирования )</h5>
+
+`});
+
+
+//--------------------------- -----------------------------
+
+
+ let person = loadedArr
+
+        .filter(p=>p.count==this.id)[0];
+
+
+ console.log(person);
+
+
+ let {
+
+    id,
+
+    live,
+
+    sex,
+
+    name,
+
+    surname,
+
+    fathername,
+
+    dateOfBirth,
+
+    dateOfBapt,
+
+    dateOfSaint,
+
+    dateDeath,
+
+    dateOfVows,
+
+    dateOfOrdinationDiak,
+
+    dateOfOrdinationPriest,
+
+    dateOfOrdinationBish,
+
+    dateOfEnthron,
+
+    comment,
+
+    other,
+
+    count,
+
+    group
+
+ } = person;
+
+
+
+// установили пол и жизнь
+
+[...allRadio].forEach(r=>{
+
+  //r.checked = false;
+
+  if(r.value === live) r.checked = true;
+
+  if(r.value === sex) r.checked = true;
+
+   //setSelects();
+
+});
+
+
+  setSelects();
+
+
+// установили селекты
+
+
+[...document.getElementsByTagName('select')].filter(s=>!s.parentElement.classList.contains('hiddening')).forEach(s=>{
+
+     [...s.children].filter(op=>op.value==other[0] || op.value==other[1]).forEach(o=>o.selected=true);
+
+  });
+
+
+
+// устанавливаем группы
+
+
+group == undefined ? console.log('that is old style') : group.forEach(g=>{
+
+  [...document.querySelectorAll(".optionForGroup")].filter(o=>o.value===g).forEach(o=>o.selected=true);
+
+
+});
+
+
+// заполнили инпуты
+
+
+[...document.querySelectorAll("input")]
+
+   .filter(i=>i.type!=='radio')
+
+   .forEach(i=>{
+
+    const matchName = i.name;
+
+    Object.keys(person)
+
+     .forEach(key=>{
+
+       if(key==matchName) i.value = person[key]
+
+     });
+
+});
+
+
+
+[...document.querySelectorAll(".datePicker")].forEach(input=>{
+
+     if(input.value) {
+
+       let div = document.createElement("div");
+
+div.innerHTML = `
+
+  <svg viewBox="0 0 100 100">
+
+       <circle cx="50" cy="50" r="20" fill="#CB3C25"/>
+
+       <g fill="transparent" stroke="#ffffff" stroke-width="4px" stroke-linejoin="round" stroke-linecap="round">
+
+               <path d="M44,44 L56,56 M44,56 L56,44" />
+
+             </g>
+
+           </svg>
+
+`;
+
+div.classList.add("miniCrossForDate");
+
+div.onclick = delDate;
+
+
+input.parentElement.append(div);
+
+     }
+
+});
+
+
+// комментарий textarea заполнили
+
+
+
+[...document.querySelectorAll("textarea")].forEach(t=>{
+
+    const matchName = t.name;
+
+    Object.keys(person)
+
+     .forEach(key=>{
+
+       if(key==matchName) t.value = person[key]
+
+     });
+
+});
+
+
+// ----------------------------
+
+
+
+//прячем боттон и меняем текст на ней ------------------------ -------------------------------
+
+
+btnAdd.innerHTML = 'сохранить изменения';
+
+
+// btnAdd.disabled = true;
+
+
+btnAdd.classList.add('hiddening');
+
+
+// ------- на любое изменение добовляем слушателя и тогда отображаем кнопку
+
+
+setTimeout(()=>{
+
+
+checkLabel();
+
+
+allFormFields.forEach(el=>el.addEventListener('change', lookAtFofmChange, false));
+
+
+groupsSelect.addEventListener('change', lookAtFofmChange, false);
+
+}, 200);
+
+
+
+setTimeout(()=>{
+
+  editCancel.addEventListener('click', exitEditModeWithoutSave);
+
+
+deleteName.addEventListener('click', deleteNote);
+
+}, 0);
+
+
+}
+
+
+
+
+
+// функция выхода ••••••••••••
+
+// •••••••••••••••••••••••••••
+
+
+function accountExit() {
+
+  [...formInputs].forEach(i=>i.value = '');
+
+  localStorage.clear();
+
+document.getElementsByClassName('loader')[0].style.display = 'block';
+
+document.getElementsByClassName('loader')[0].classList.remove('loaderGone');
+
+
+const myKey = [...document.querySelectorAll('.hml')]
+
+   .filter(link=>link.classList.contains('activLink'))[0].dataset.key;
+
+
+document.querySelectorAll(`div[data-key='${myKey}']`)[0].classList.add('hiddening');
+
+
+setTimeout(()=>{
+
+   closingMenu();
+
+document.getElementsByClassName('loader')[0].classList.add('loaderGone');
+
+document.getElementsByClassName('singInPage')[0].classList.remove('hiddening');
+
+sandwich.classList.add('hiddening');
+
+}, 1500);
+
+
+setTimeout(()=>{
+
+  document.getElementsByClassName('loader')[0].style.display = 'none';
+
+}, 1700);
+
+}
+
+
 
 
 // new user registration f •••• •••••••••••••••••••••••••••••••
@@ -999,9 +1446,15 @@ function commaChange(title) {
 
  
 
-if(counter<oZdrPlay.clientHeight)
+if(counter<oZdrPlay.clientHeight){
 
      myReq = requestAn(scrollSinodikOZdravii);
+
+} else {
+
+  closePlayMode();
+
+}
 
      }
 
@@ -1024,9 +1477,16 @@ myReq = requestAn(scrollSinodikOZdravii);
 
     
 
-if(counter<oUpkPlay.clientHeight)
+if(counter<oUpkPlay.clientHeight){
 
 myReq = requestAn(scrollSinodikOUpokoenii);
+
+} else {
+
+  closePlayMode();
+
+}
+
 
      }
 
@@ -1254,29 +1714,7 @@ let actualArr = startGroupsArr || [...groupsArr];
 
     .join('</br>')}
 
-  </br></br></br></br>+ + +</br></br></br></br>
-
-    ${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о здравии' && ![...checker].includes(data.count))
-
-  .map(data=>{
-
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}
-
-  </br></br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
+  </br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
 
     
 
@@ -1373,29 +1811,7 @@ let actualArr = startGroupsArr || [...groupsArr];
 
     .join('</br>')}
 
-  </br></br></br></br>+ + +</br></br></br></br>
-
-   ${allNamesArr
-
-  .sort()
-
-  .filter(data=>data.live == 'о упокоении' && ![...checker].includes(data.count))
-
-  .map(data=>{
-
-  return (`<div class='commonBox'>
-
-    <div class='commonBox_name'>${data.other.join(' ')} ${namesEndEditor(data.name)}</div>
-
-    <div class='commonBox_other'>(${ data.surname &&  data.comment[0] ? [data.surname, ...data.comment].join(', ') : data.surname && !data.comment[0] ? data.surname : data.comment})</div>
-
-    </div>
-
-  `);
-
-}).join('</br>')}
-
-  </br></br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
+  </br></br></br>+ + +</br></br>КОНЕЦ И БОГУ СЛАВА!</br></br>+ + +</br></br></br></br></br></br>
 
 </div>
 
@@ -2078,6 +2494,9 @@ function cancelDel(){
 
 function okDel(){
 
+
+[...document.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
+
   document.getElementsByClassName('msgDiv')[0].innerHTML = `удаляем запись!`;
 
 
@@ -2430,6 +2849,8 @@ function delDate(){
 
 this.previousElementSibling.value = '';
 
+[...this.parentNode.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
+
 this.remove();
 
 }
@@ -2729,6 +3150,9 @@ function invalidData(msg, el) {
 
 
 function setDataTest() { 
+
+
+  [...document.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
 
 
   myAlert('данные сохраняются');
@@ -3384,6 +3808,9 @@ setTimeout(()=>{
   function exitEditModeWithoutSave(){
 
 
+[...document.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
+
+
   if([...document.getElementsByClassName('miniCrossForDate')].length>0) {
 
 [...document.getElementsByClassName('miniCrossForDate')].forEach(d=>d.remove());
@@ -3453,273 +3880,6 @@ document.querySelectorAll('.formTitle')[0].innerHTML = `<h3>Создание н�
 
 
 
-//---функция открытия формы редактирования---------
-
-
-
-function showEditform() {
-
-
-allSelects.filter(d=>d.id!=='groupsSelect').forEach(s=>addEventListener('change', selectRules));
-
-
-editMode = true;
-
-
-[...document.querySelectorAll('.searchedItem')].forEach(d=>d.removeEventListener('click', showEditform, false));
-
-
-window.scrollTo({top: 0, behavior: 'smooth'});
-
-
-// пробую заполнить имеющийся шаблон
-
-searchingForChange.classList.add('hiddening');
-
-formHolder.style.opacity = 1;
-
-formHolder.classList.remove('hiddening');
-
-
-document.querySelectorAll('.formTitle')[0].innerHTML = loadedArr
-
-        .filter(p=>p.count==this.id).map(p=>{
-
-   countSearched = p.count;
-
-   IDtoEdit = p._id.$oid;
-
-   
-
-
-   return `
-
-    <div id='deleteName'>удалить запись</div>
-
-    <div id='editCancel'>отменить редактирование</div>
-
-    <h3>${p.other} ${p.name} ${p.surname}</h3>
-
-    <h5>( режим редактирования )</h5>
-
-`});
-
-
-//--------------------------- -----------------------------
-
-
- let person = loadedArr
-
-        .filter(p=>p.count==this.id)[0];
-
-
- console.log(person);
-
-
- let {
-
-    id,
-
-    live,
-
-    sex,
-
-    name,
-
-    surname,
-
-    fathername,
-
-    dateOfBirth,
-
-    dateOfBapt,
-
-    dateOfSaint,
-
-    dateDeath,
-
-    dateOfVows,
-
-    dateOfOrdinationDiak,
-
-    dateOfOrdinationPriest,
-
-    dateOfOrdinationBish,
-
-    dateOfEnthron,
-
-    comment,
-
-    other,
-
-    count,
-
-    group
-
- } = person;
-
-
-
-// установили пол и жизнь
-
-[...allRadio].forEach(r=>{
-
-  //r.checked = false;
-
-  if(r.value === live) r.checked = true;
-
-  if(r.value === sex) r.checked = true;
-
-   //setSelects();
-
-});
-
-
-  setSelects();
-
-
-// установили селекты
-
-
-[...document.getElementsByTagName('select')].filter(s=>!s.parentElement.classList.contains('hiddening')).forEach(s=>{
-
-     [...s.children].filter(op=>op.value==other[0] || op.value==other[1]).forEach(o=>o.selected=true);
-
-  });
-
-
-
-// устанавливаем группы
-
-
-group == undefined ? console.log('that is old style') : group.forEach(g=>{
-
-  [...document.querySelectorAll(".optionForGroup")].filter(o=>o.value===g).forEach(o=>o.selected=true);
-
-
-});
-
-
-// заполнили инпуты
-
-
-[...document.querySelectorAll("input")]
-
-   .filter(i=>i.type!=='radio')
-
-   .forEach(i=>{
-
-    const matchName = i.name;
-
-    Object.keys(person)
-
-     .forEach(key=>{
-
-       if(key==matchName) i.value = person[key]
-
-     });
-
-});
-
-
-
-[...document.querySelectorAll(".datePicker")].forEach(input=>{
-
-     if(input.value) {
-
-       let div = document.createElement("div");
-
-div.innerHTML = `
-
-  <svg viewBox="0 0 100 100">
-
-       <circle cx="50" cy="50" r="20" fill="#CB3C25"/>
-
-       <g fill="transparent" stroke="#ffffff" stroke-width="4px" stroke-linejoin="round" stroke-linecap="round">
-
-               <path d="M44,44 L56,56 M44,56 L56,44" />
-
-             </g>
-
-           </svg>
-
-`;
-
-div.classList.add("miniCrossForDate");
-
-div.onclick = delDate;
-
-
-input.parentElement.append(div);
-
-     }
-
-});
-
-
-// комментарий textarea заполнили
-
-
-
-[...document.querySelectorAll("textarea")].forEach(t=>{
-
-    const matchName = t.name;
-
-    Object.keys(person)
-
-     .forEach(key=>{
-
-       if(key==matchName) t.value = person[key]
-
-     });
-
-});
-
-
-// ----------------------------
-
-
-
-//прячем боттон и меняем текст на ней ------------------------ -------------------------------
-
-
-btnAdd.innerHTML = 'сохранить изменения';
-
-
-// btnAdd.disabled = true;
-
-
-btnAdd.classList.add('hiddening');
-
-
-// ------- на любое изменение добовляем слушателя и тогда отображаем кнопку
-
-
-setTimeout(()=>{
-
-
-allFormFields.forEach(el=>el.addEventListener('change', lookAtFofmChange, false));
-
-
-groupsSelect.addEventListener('change', lookAtFofmChange, false);
-
-}, 200);
-
-
-
-setTimeout(()=>{
-
-  editCancel.addEventListener('click', exitEditModeWithoutSave);
-
-
-deleteName.addEventListener('click', deleteNote);
-
-}, 0);
-
-
-}
-
-
 
 
 // -- просто отобразить кнопку и удалить слушателя 
@@ -3749,6 +3909,19 @@ groupsSelect.removeEventListener('change', lookAtFofmChange, false);
 
 
 function openingMenu() {
+
+
+[...document.querySelectorAll(".yellowLabel")].forEach(s=>s.remove());
+
+
+[...document.querySelectorAll("input")]
+
+.filter(i=>i.type!=='radio')
+
+.forEach(i=>removeEventListener('keyup', showYellowLabel));
+
+
+[...document.querySelectorAll("textarea")].forEach(i=>removeEventListener('keyup', showYellowLabel));
 
 
 groupsTitle.innerHTML = '';
@@ -3895,6 +4068,17 @@ function closingMenu() {
 
 
 function closingMenuAndAllListField() {
+
+
+[...document.querySelectorAll("input")]
+
+.filter(i=>i.type!=='radio')
+
+.forEach(i=>addEventListener('keyup', showYellowLabel));
+
+
+
+[...document.querySelectorAll("textarea")].forEach(i=>addEventListener('keyup', showYellowLabel));
 
 
 
@@ -5198,6 +5382,10 @@ changeListTag.addEventListener('click', closingMenuAndGoSearch);
 changeGroupTag.addEventListener('click', closingMenuAndChangeGroup);
 
 
+exitTag.addEventListener('click', accountExit, false);
+
+
+
 
 [...document.getElementsByTagName('textarea')].forEach(txarea=>txarea.addEventListener('keyup', pushLabelUp, {once: true}));
 
@@ -5561,6 +5749,28 @@ div.onclick = delDate;
 
 
 input.parentElement.append(div);
+
+
+let span = document.createElement('span');
+
+   span.classList.add('yellowLabel');
+
+   span.innerHTML = input.placeholder;
+
+  span.style.color = '#EDB021';
+
+  span.style.fontSize = '.7rem';
+
+  span.style.position = 'absolute';
+
+  span.style.top = '.5px';
+
+  span.style.left = '5px';
+
+       //alert(this.outerHTML);
+
+input.parentNode.prepend(span);
+
 
 }
 
